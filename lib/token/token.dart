@@ -1,7 +1,6 @@
 library token;
 
 class Token {
-
   static const ILLEGAL = "ILLEGAL",
       EOF = "EOF",
 
@@ -16,7 +15,6 @@ class Token {
 // Delimiters
       COMMA = ",",
       SEMICOLON = ";",
-
       LPAREN = "(",
       RPAREN = ")",
       LBRACE = "{",
@@ -33,5 +31,4 @@ class Token {
 
   bool operator ==(o) =>
       o is Token && o.tokenType == tokenType && o.literal == literal;
-
 }

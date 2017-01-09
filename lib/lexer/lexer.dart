@@ -3,7 +3,6 @@ library lexer;
 import 'package:monkey_dart/token/token.dart';
 
 class Lexer {
-
   String input;
 
   /** current position in input (points to current char) */
@@ -65,5 +64,4 @@ class Lexer {
     readChar();
     return token;
   }
-
 }
