@@ -1,0 +1,9 @@
+name: monkey_dart
+version: 0.0.1
+description: >
+  Implementing a Monkey programming language interpreter in Dart.
+author: Marc Reichelt
+homepage: https://github.com/mreichelt/monkey-dart
+dependencies:
+dev_dependencies:
+  test: ^0.12.18+1
