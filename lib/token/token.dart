@@ -59,4 +59,9 @@ class Token {
     String value = keywords[ident];
     return value == null ? Token.IDENT : value;
   }
+
+  @override
+  String toString() {
+    return 'Token{type: $tokenType, literal: $literal}';
+  }
 }
