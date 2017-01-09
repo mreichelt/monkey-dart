@@ -53,6 +53,9 @@ void main() {
       } else {
         return false;
       }
+
+      10 == 10;
+      10 != 9;
     """;
     List<Token> expected = [
       t(Token.LET, "let"),
@@ -120,6 +123,14 @@ void main() {
       t(Token.FALSE, "false"),
       t(Token.SEMICOLON, ";"),
       t(Token.RBRACE, "}"),
+      t(Token.INT, "10"),
+      t(Token.EQ, "=="),
+      t(Token.INT, "10"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.INT, "10"),
+      t(Token.NOT_EQ, "!="),
+      t(Token.INT, "9"),
+      t(Token.SEMICOLON, ";"),
       t(Token.EOF, "")
     ];
 

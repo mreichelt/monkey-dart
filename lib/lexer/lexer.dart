@@ -34,7 +34,13 @@ class Lexer {
     Token token;
     switch (ch) {
       case '=':
-        token = new Token(Token.ASSIGN, ch);
+        if (peekChar() == '=') {
+          String temp = ch;
+          readChar();
+          token = new Token(Token.EQ, temp + ch);
+        } else {
+          token = new Token(Token.ASSIGN, ch);
+        }
         break;
       case ';':
         token = new Token(Token.SEMICOLON, ch);
@@ -55,7 +61,13 @@ class Lexer {
         token = new Token(Token.MINUS, ch);
         break;
       case '!':
-        token = new Token(Token.BANG, ch);
+        if (peekChar() == '=') {
+          String temp = ch;
+          readChar();
+          token = new Token(Token.NOT_EQ, temp + ch);
+        } else {
+          token = new Token(Token.BANG, ch);
+        }
         break;
       case '/':
         token = new Token(Token.SLASH, ch);
@@ -145,5 +157,13 @@ class Lexer {
       readChar();
     }
     return input.substring(firstPosition, position);
+  }
+
+  String peekChar() {
+    if (readPosition >= input.length) {
+      return null;
+    } else {
+      return input[readPosition];
+    }
   }
 }
