@@ -28,11 +28,21 @@ class Token {
 
 // Keywords
       FUNCTION = "FUNCTION",
-      LET = "LET";
+      LET = "LET",
+      TRUE = "TRUE",
+      FALSE = "FALSE",
+      IF = "IF",
+      ELSE = "ELSE",
+      RETURN = "RETURN";
 
   static const Map<String, String> keywords = const {
     "fn": Token.FUNCTION,
-    "let": Token.LET
+    "let": Token.LET,
+    "true": Token.TRUE,
+    "false": Token.FALSE,
+    "if": Token.IF,
+    "else": Token.ELSE,
+    "return": Token.RETURN
   };
 
   String tokenType;
