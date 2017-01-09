@@ -1,30 +1,91 @@
-import 'package:monkey_dart/token/token.dart';
-import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:test/test.dart';
+import 'package:monkey_dart/lexer/lexer.dart';
+import 'package:monkey_dart/token/token.dart';
+
+Token t(String tokenType, String literal) {
+  return new Token(tokenType, literal);
+}
+
+void testLexer(List<Token> expected, String input) {
+  Lexer lexer = new Lexer(input);
+  for (int i = 0; i < expected.length; i++) {
+    Token expectedToken = expected[i];
+    Token actualToken = lexer.nextToken();
+    print("${actualToken.literal} ");
+    expect(actualToken.tokenType, expectedToken.tokenType,
+        reason: "tests[$i] - tokentype wrong");
+    expect(actualToken.literal, expectedToken.literal,
+        reason: "tests[$i] - literal wrong");
+  }
+}
 
 void main() {
   test("test lexer with input =+(){},;", () {
     String input = "=+(){},;";
     List<Token> expected = [
-      new Token(Token.ASSIGN, "="),
-      new Token(Token.PLUS, "+"),
-      new Token(Token.LPAREN, "("),
-      new Token(Token.RPAREN, ")"),
-      new Token(Token.LBRACE, "{"),
-      new Token(Token.RBRACE, "}"),
-      new Token(Token.COMMA, ","),
-      new Token(Token.SEMICOLON, ";"),
-      new Token(Token.EOF, "")
+      t(Token.ASSIGN, "="),
+      t(Token.PLUS, "+"),
+      t(Token.LPAREN, "("),
+      t(Token.RPAREN, ")"),
+      t(Token.LBRACE, "{"),
+      t(Token.RBRACE, "}"),
+      t(Token.COMMA, ","),
+      t(Token.SEMICOLON, ";"),
+      t(Token.EOF, "")
     ];
 
-    Lexer lexer = new Lexer(input);
-    for (int i = 0; i < expected.length; i++) {
-      Token expectedToken = expected[i];
-      Token actualToken = lexer.nextToken();
-      expect(actualToken.tokenType, expectedToken.tokenType,
-          reason: "tests[$i] - tokentype wrong");
-      expect(actualToken.literal, expectedToken.literal,
-          reason: "tests[$i] - literal wrong");
-    }
+    testLexer(expected, input);
+  });
+
+  test("test variable assignment", () {
+    String input = """
+    let five = 5;
+    let ten = 10;
+    let add = fn(x, y) {
+      x + y;
+    };
+    let result = add(five, ten);
+   """;
+    List<Token> expected = [
+      t(Token.LET, "let"),
+      t(Token.IDENT, "five"),
+      t(Token.ASSIGN, "="),
+      t(Token.INT, "5"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.LET, "let"),
+      t(Token.IDENT, "ten"),
+      t(Token.ASSIGN, "="),
+      t(Token.INT, "10"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.LET, "let"),
+      t(Token.IDENT, "add"),
+      t(Token.ASSIGN, "="),
+      t(Token.FUNCTION, "fn"),
+      t(Token.LPAREN, "("),
+      t(Token.IDENT, "x"),
+      t(Token.COMMA, ","),
+      t(Token.IDENT, "y"),
+      t(Token.RPAREN, ")"),
+      t(Token.LBRACE, "{"),
+      t(Token.IDENT, "x"),
+      t(Token.PLUS, "+"),
+      t(Token.IDENT, "y"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.RBRACE, "}"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.LET, "let"),
+      t(Token.IDENT, "result"),
+      t(Token.ASSIGN, "="),
+      t(Token.IDENT, "add"),
+      t(Token.LPAREN, "("),
+      t(Token.IDENT, "five"),
+      t(Token.COMMA, ","),
+      t(Token.IDENT, "ten"),
+      t(Token.RPAREN, ")"),
+      t(Token.SEMICOLON, ";"),
+      t(Token.EOF, "")
+    ];
+
+    testLexer(expected, input);
   });
 }

@@ -29,8 +29,9 @@ class Lexer {
   }
 
   Token nextToken() {
-    Token token;
+    skipWhitespace();
 
+    Token token;
     switch (ch) {
       case '=':
         token = new Token(Token.ASSIGN, ch);
@@ -59,9 +60,72 @@ class Lexer {
       case '\0':
         token = new Token(Token.EOF, '');
         break;
+      default:
+        if (isLetter(ch)) {
+          String ident = readIdentifier();
+          return new Token(Token.lookupIdent(ident), ident);
+        } else if (isDigit(ch)) {
+          return new Token(Token.INT, readNumber());
+        } else {
+          token = new Token(Token.ILLEGAL, ch);
+        }
+        break;
     }
 
     readChar();
     return token;
+  }
+
+  void skipWhitespace() {
+    while (isWhitespace(ch)) {
+      readChar();
+    }
+  }
+
+  static int code(String ch) {
+    return ch.codeUnitAt(0);
+  }
+
+  static final int a = code('a');
+  static final int z = code('z');
+  static final int A = code('A');
+  static final int Z = code('Z');
+  static final int _ = code('_');
+  static final int space = code(' ');
+  static final int tab = code('\t');
+  static final int newline = code('\n');
+  static final int carriage = code('\r');
+  static final int zero = code('0');
+  static final int nine = code('9');
+
+  bool isDigit(String ch) {
+    int c = ch.codeUnitAt(0);
+    return c >= zero && c <= nine;
+  }
+
+  bool isWhitespace(String ch) {
+    int c = ch.codeUnitAt(0);
+    return c == space || c == tab || c == newline || c == carriage;
+  }
+
+  static bool isLetter(String ch) {
+    int c = ch.codeUnitAt(0);
+    return a <= c && c <= z || A <= c && c <= Z || c == _;
+  }
+
+  String readIdentifier() {
+    int firstPosition = position;
+    while (isLetter(ch)) {
+      readChar();
+    }
+    return input.substring(firstPosition, position);
+  }
+
+  String readNumber() {
+    int firstPosition = position;
+    while (isDigit(ch)) {
+      readChar();
+    }
+    return input.substring(firstPosition, position);
   }
 }
