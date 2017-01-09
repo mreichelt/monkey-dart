@@ -1,7 +1,12 @@
 language: dart
+sudo: false
+
+git:
+ depth: 3
+
 dart:
-  - dev
   - stable
+
 script: ./tool/travis.sh
 env:
   - DARTANALYZER_FLAGS=--fatal-warnings
