@@ -11,17 +11,13 @@ void main() {
       let foobar = 838383;
    """;
 
-    Lexer lexer = new Lexer(input);
-    Parser parser = new Parser(lexer);
+    Parser parser = new Parser(new Lexer(input));
     Program program = parser.parseProgram();
     checkParserErrors(parser);
 
     expect(program, isNotNull, reason: "parseProgram() returned null");
 
-    var numStatements = program.statements.length;
-    expect(numStatements, equals(3),
-        reason:
-            "program.statements does not contain 3 statements. got=$numStatements");
+    expectNumStatements(program, 3);
 
     List<String> identifiers = ['x', 'y', 'foobar'];
     for (int i = 0; i < identifiers.length; i++) {
@@ -29,6 +25,32 @@ void main() {
       testLetStatement(statement, identifiers[i]);
     }
   });
+
+  test("test return statements", () {
+    String input = """
+      return 5;
+      return 10;
+      return 993322;
+   """;
+
+    Parser parser = new Parser(new Lexer(input));
+    Program program = parser.parseProgram();
+    checkParserErrors(parser);
+
+    expectNumStatements(program, 3);
+
+    program.statements.forEach((statement) {
+      expect(statement, new isInstanceOf<ReturnStatement>());
+      expect(statement.tokenLiteral(), equals('return'));
+    });
+  });
+}
+
+void expectNumStatements(Program program, int expectedStatements) {
+  expect(program.statements.length, equals(expectedStatements),
+      reason:
+          "program.statements does not contain $expectedStatements statements. got=${program
+          .statements.length}");
 }
 
 void checkParserErrors(Parser parser) {

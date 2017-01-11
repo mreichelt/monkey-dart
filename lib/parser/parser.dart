@@ -38,9 +38,23 @@ class Parser {
     switch (currentToken.type) {
       case Token.LET:
         return parseLetStatement();
+      case Token.RETURN:
+        return parseReturnStatement();
       default:
         return null;
     }
+  }
+
+  ReturnStatement parseReturnStatement() {
+    ReturnStatement statement = new ReturnStatement(currentToken);
+    nextToken();
+
+    // TODO: We're skipping the expressions until we encounter a semicolon
+    while (!currentTokenIs(Token.SEMICOLON)) {
+      nextToken();
+    }
+
+    return statement;
   }
 
   LetStatement parseLetStatement() {
@@ -57,7 +71,7 @@ class Parser {
     }
 
     // TODO: We're skipping the expressions until we encounter a semicolon
-    if (!currentTokenIs(Token.SEMICOLON)) {
+    while (!currentTokenIs(Token.SEMICOLON)) {
       nextToken();
     }
 
@@ -83,6 +97,6 @@ class Parser {
 
   void peekError(String tokenType) {
     errors.add("expected next token to be $tokenType, but got ${currentToken
-            .type} instead");
+        .type} instead");
   }
 }

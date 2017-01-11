@@ -19,7 +19,8 @@ class Program extends Node {
 }
 
 class Identifier extends Expression {
-  Token token; // the IDENT token
+  // the IDENT token
+  Token token;
   String value;
 
   Identifier(this.token, this.value);
@@ -31,11 +32,25 @@ class Identifier extends Expression {
 }
 
 class LetStatement extends Statement {
-  Token token; // the LET token
+  // the LET token
+  Token token;
   Identifier name;
   Expression value;
 
   LetStatement(this.token);
+
+  @override
+  String tokenLiteral() {
+    return token.literal;
+  }
+}
+
+class ReturnStatement extends Statement {
+  // the 'return' token
+  Token token;
+  Expression returnValue;
+
+  ReturnStatement(this.token);
 
   @override
   String tokenLiteral() {
