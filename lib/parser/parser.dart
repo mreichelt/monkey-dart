@@ -22,7 +22,7 @@ class Parser {
   Program parseProgram() {
     Program program = new Program();
     program.statements = new List();
-    while (currentToken.tokenType != Token.EOF) {
+    while (!currentTokenIs(Token.EOF)) {
       Statement statement = parseStatement();
       if (statement != null) {
         program.statements.add(statement);
