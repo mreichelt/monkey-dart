@@ -17,7 +17,7 @@ void start() {
 
     Lexer lexer = new Lexer(inputText);
     for (Token token = lexer.nextToken();
-        token.tokenType != Token.EOF;
+        token.type != Token.EOF;
         token = lexer.nextToken()) {
       print(token);
     }

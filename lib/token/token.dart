@@ -47,13 +47,12 @@ class Token {
     "return": Token.RETURN
   };
 
-  String tokenType;
+  String type;
   String literal;
 
-  Token(this.tokenType, this.literal);
+  Token(this.type, this.literal);
 
-  bool operator ==(o) =>
-      o is Token && o.tokenType == tokenType && o.literal == literal;
+  bool operator ==(o) => o is Token && o.type == type && o.literal == literal;
 
   static String lookupIdent(String ident) {
     String value = keywords[ident];
@@ -62,6 +61,6 @@ class Token {
 
   @override
   String toString() {
-    return 'Token{type: $tokenType, literal: $literal}';
+    return 'Token{type: $type, literal: $literal}';
   }
 }

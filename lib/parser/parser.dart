@@ -34,7 +34,7 @@ class Parser {
   }
 
   Statement parseStatement() {
-    switch (currentToken.tokenType) {
+    switch (currentToken.type) {
       case Token.LET:
         return parseLetStatement();
       default:
@@ -64,15 +64,15 @@ class Parser {
   }
 
   bool currentTokenIs(String tokenType) {
-    return currentToken.tokenType == tokenType;
+    return currentToken.type == tokenType;
   }
 
   bool peekTokenIs(String tokenType) {
-    return peekToken.tokenType == tokenType;
+    return peekToken.type == tokenType;
   }
 
   bool expectPeek(String tokenType) {
-    if (peekToken.tokenType == tokenType) {
+    if (peekToken.type == tokenType) {
       nextToken();
       return true;
     }

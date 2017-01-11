@@ -12,7 +12,7 @@ void testLexer(List<Token> expected, String input) {
     Token expectedToken = expected[i];
     Token actualToken = lexer.nextToken();
     print("${actualToken.literal} ");
-    expect(actualToken.tokenType, expectedToken.tokenType,
+    expect(actualToken.type, expectedToken.type,
         reason: "tests[$i] - tokentype wrong");
     expect(actualToken.literal, expectedToken.literal,
         reason: "tests[$i] - literal wrong");
