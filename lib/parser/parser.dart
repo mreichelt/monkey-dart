@@ -8,6 +8,7 @@ class Parser {
   Lexer lexer;
   Token currentToken;
   Token peekToken;
+  List<String> errors = [];
 
   Parser(this.lexer) {
     nextToken();
@@ -76,6 +77,12 @@ class Parser {
       nextToken();
       return true;
     }
+    peekError(tokenType);
     return false;
+  }
+
+  void peekError(String tokenType) {
+    errors.add("expected next token to be $tokenType, but got ${currentToken
+            .type} instead");
   }
 }

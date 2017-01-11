@@ -4,7 +4,7 @@ import 'package:monkey_dart/parser/parser.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("test let assignments", () {
+  test("test let statements", () {
     String input = """
       let x = 5;
       let y = 10;
@@ -14,6 +14,7 @@ void main() {
     Lexer lexer = new Lexer(input);
     Parser parser = new Parser(lexer);
     Program program = parser.parseProgram();
+    checkParserErrors(parser);
 
     expect(program, isNotNull, reason: "parseProgram() returned null");
 
@@ -28,6 +29,19 @@ void main() {
       testLetStatement(statement, identifiers[i]);
     }
   });
+}
+
+void checkParserErrors(Parser parser) {
+  if (parser.errors.isEmpty) {
+    return;
+  }
+
+  print("parser has ${parser.errors.length} errors");
+  parser.errors.forEach((error) {
+    print("parser error: $error");
+  });
+
+  fail('');
 }
 
 void testLetStatement(Statement statement, String expectedIdentifier) {
