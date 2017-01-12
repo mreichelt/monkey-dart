@@ -73,6 +73,8 @@ class ExpressionStatement extends Statement {
   Token token;
   Expression expression;
 
+  ExpressionStatement(this.token);
+
   @override
   String tokenLiteral() => token.literal;
 

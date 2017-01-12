@@ -4,15 +4,35 @@ import 'package:monkey_dart/ast/ast.dart';
 import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:monkey_dart/token/token.dart';
 
+enum Precedence {
+  _,
+  LOWEST,
+  // ==
+  EQUALS,
+  // > or <
+  LESSGREATER,
+  // +
+  SUM,
+  // *
+  PRODUCT,
+  // -x or !x
+  PREFIX,
+  // myFunction(x)
+  CALL
+}
+
 class Parser {
   Lexer lexer;
   Token currentToken;
   Token peekToken;
   List<String> errors = [];
+  Map<String, Function> prefixParseFns = {};
+  Map<String, Function> infixParseFns = {};
 
   Parser(this.lexer) {
     nextToken();
     nextToken();
+    registerPrefix(Token.IDENT, parseIdentifier);
   }
 
   void nextToken() {
@@ -41,7 +61,7 @@ class Parser {
       case Token.RETURN:
         return parseReturnStatement();
       default:
-        return null;
+        return parseExpressionStatement();
     }
   }
 
@@ -78,6 +98,23 @@ class Parser {
     return statement;
   }
 
+  ExpressionStatement parseExpressionStatement() {
+    ExpressionStatement statement = new ExpressionStatement(currentToken);
+    statement.expression = parseExpression(Precedence.LOWEST);
+    if (peekTokenIs(Token.SEMICOLON)) {
+      nextToken();
+    }
+    return statement;
+  }
+
+  Expression parseExpression(Precedence precedence) {
+    Function prefix = prefixParseFns[currentToken.type];
+    if (prefix == null) {
+      return null;
+    }
+    return prefix();
+  }
+
   bool currentTokenIs(String tokenType) {
     return currentToken.type == tokenType;
   }
@@ -99,4 +136,15 @@ class Parser {
     errors.add("expected next token to be $tokenType, but got ${currentToken
         .type} instead");
   }
+
+  void registerPrefix(String tokenType, Function prefixParseFn) {
+    prefixParseFns[tokenType] = prefixParseFn;
+  }
+
+  void registerInfix(String tokenType, Function infixParseFn) {
+    infixParseFns[tokenType] = infixParseFn;
+  }
+
+  Expression parseIdentifier() =>
+      new Identifier(currentToken, currentToken.literal);
 }
