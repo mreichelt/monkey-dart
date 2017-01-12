@@ -7,17 +7,23 @@ import 'package:monkey_dart/token/token.dart';
 enum Precedence {
   _,
   LOWEST,
-  // ==
+
+  /// ==
   EQUALS,
-  // > or <
+
+  /// > or <
   LESSGREATER,
-  // +
+
+  /// +
   SUM,
-  // *
+
+  /// *
   PRODUCT,
-  // -x or !x
+
+  /// -x or !x
   PREFIX,
-  // myFunction(x)
+
+  /// myFunction(x)
   CALL
 }
 

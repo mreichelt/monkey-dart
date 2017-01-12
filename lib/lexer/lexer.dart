@@ -5,13 +5,13 @@ import 'package:monkey_dart/token/token.dart';
 class Lexer {
   String input;
 
-  /** current position in input (points to current char) */
+  /// current position in input (points to current char)
   int position = 0;
 
-  /** current reading position in input (after current char) */
+  /// current reading position in input (after current char)
   int readPosition = 0;
 
-  /** current char under examination */
+  /// current char under examination
   String ch;
 
   Lexer(this.input) {
