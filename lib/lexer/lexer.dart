@@ -20,7 +20,7 @@ class Lexer {
 
   void readChar() {
     if (readPosition >= input.length) {
-      ch = '\0';
+      ch = null;
     } else {
       ch = input[readPosition];
     }
@@ -32,74 +32,75 @@ class Lexer {
     skipWhitespace();
 
     Token token;
-    switch (ch) {
-      case '=':
-        if (peekChar() == '=') {
-          String temp = ch;
-          readChar();
-          token = new Token(Token.EQ, temp + ch);
-        } else {
-          token = new Token(Token.ASSIGN, ch);
-        }
-        break;
-      case ';':
-        token = new Token(Token.SEMICOLON, ch);
-        break;
-      case '(':
-        token = new Token(Token.LPAREN, ch);
-        break;
-      case ')':
-        token = new Token(Token.RPAREN, ch);
-        break;
-      case ',':
-        token = new Token(Token.COMMA, ch);
-        break;
-      case '+':
-        token = new Token(Token.PLUS, ch);
-        break;
-      case '-':
-        token = new Token(Token.MINUS, ch);
-        break;
-      case '!':
-        if (peekChar() == '=') {
-          String temp = ch;
-          readChar();
-          token = new Token(Token.NOT_EQ, temp + ch);
-        } else {
-          token = new Token(Token.BANG, ch);
-        }
-        break;
-      case '/':
-        token = new Token(Token.SLASH, ch);
-        break;
-      case '*':
-        token = new Token(Token.ASTERISK, ch);
-        break;
-      case '<':
-        token = new Token(Token.LT, ch);
-        break;
-      case '>':
-        token = new Token(Token.GT, ch);
-        break;
-      case '{':
-        token = new Token(Token.LBRACE, ch);
-        break;
-      case '}':
-        token = new Token(Token.RBRACE, ch);
-        break;
-      case '\0':
-        token = new Token(Token.EOF, '');
-        break;
-      default:
-        if (isLetter(ch)) {
-          String ident = readIdentifier();
-          return new Token(Token.lookupIdent(ident), ident);
-        } else if (isDigit(ch)) {
-          return new Token(Token.INT, readNumber());
-        } else {
-          token = new Token(Token.ILLEGAL, ch);
-        }
-        break;
+    if (ch == null) {
+      token = new Token(Token.EOF, '');
+    } else {
+      switch (ch) {
+        case '=':
+          if (peekChar() == '=') {
+            String temp = ch;
+            readChar();
+            token = new Token(Token.EQ, temp + ch);
+          } else {
+            token = new Token(Token.ASSIGN, ch);
+          }
+          break;
+        case ';':
+          token = new Token(Token.SEMICOLON, ch);
+          break;
+        case '(':
+          token = new Token(Token.LPAREN, ch);
+          break;
+        case ')':
+          token = new Token(Token.RPAREN, ch);
+          break;
+        case ',':
+          token = new Token(Token.COMMA, ch);
+          break;
+        case '+':
+          token = new Token(Token.PLUS, ch);
+          break;
+        case '-':
+          token = new Token(Token.MINUS, ch);
+          break;
+        case '!':
+          if (peekChar() == '=') {
+            String temp = ch;
+            readChar();
+            token = new Token(Token.NOT_EQ, temp + ch);
+          } else {
+            token = new Token(Token.BANG, ch);
+          }
+          break;
+        case '/':
+          token = new Token(Token.SLASH, ch);
+          break;
+        case '*':
+          token = new Token(Token.ASTERISK, ch);
+          break;
+        case '<':
+          token = new Token(Token.LT, ch);
+          break;
+        case '>':
+          token = new Token(Token.GT, ch);
+          break;
+        case '{':
+          token = new Token(Token.LBRACE, ch);
+          break;
+        case '}':
+          token = new Token(Token.RBRACE, ch);
+          break;
+        default:
+          if (isLetter(ch)) {
+            String ident = readIdentifier();
+            return new Token(Token.lookupIdent(ident), ident);
+          } else if (isDigit(ch)) {
+            return new Token(Token.INT, readNumber());
+          } else {
+            token = new Token(Token.ILLEGAL, ch);
+          }
+          break;
+      }
     }
 
     readChar();
@@ -129,16 +130,25 @@ class Lexer {
   static final int nine = code('9');
 
   bool isDigit(String ch) {
+    if (ch == null) {
+      return false;
+    }
     int c = ch.codeUnitAt(0);
     return c >= zero && c <= nine;
   }
 
   bool isWhitespace(String ch) {
+    if (ch == null) {
+      return false;
+    }
     int c = ch.codeUnitAt(0);
     return c == space || c == tab || c == newline || c == carriage;
   }
 
   static bool isLetter(String ch) {
+    if (ch == null) {
+      return false;
+    }
     int c = ch.codeUnitAt(0);
     return a <= c && c <= z || A <= c && c <= Z || c == _;
   }

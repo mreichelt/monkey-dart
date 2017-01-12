@@ -77,6 +77,24 @@ void main() {
     testInfix("5 == 5;", 5, "==", 5);
     testInfix("5 != 5;", 5, "!=", 5);
   });
+
+  test("test operator precedence parsing", () {
+    testPrecedence("-a * b", "((-a) * b)");
+    testPrecedence("!-a", "(!(-a))");
+    testPrecedence("a + b + c", "((a + b) + c)");
+    testPrecedence("a + b - c", "((a + b) - c)");
+    testPrecedence("a * b * c", "((a * b) * c)");
+    testPrecedence("a * b / c", "((a * b) / c)");
+    testPrecedence("a + b / c", "(a + (b / c))");
+    testPrecedence("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)");
+    testPrecedence("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)");
+    testPrecedence("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))");
+    testPrecedence("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))");
+    testPrecedence(
+        "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
+    testPrecedence(
+        "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
+  });
 }
 
 void testPrefix(String input, String operator, int integerValue) {
@@ -106,6 +124,11 @@ void testInfix(String input, int leftValue, String operator, int rightValue) {
   testIntegerLiteral(expression.left, leftValue);
   expect(expression.operator, equals(operator));
   testIntegerLiteral(expression.right, rightValue);
+}
+
+void testPrecedence(String input, String expected) {
+  Program program = parseProgramChecked(input);
+  expect(program.toString(), equals(expected));
 }
 
 void testIntegerLiteral(Expression expression, int integerValue) {
