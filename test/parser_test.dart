@@ -42,8 +42,8 @@ void main() {
 
     expectNumStatements(program, 1);
 
-    expect(program.statements[0], new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement statement = program.statements[0];
+    expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement statement = program.statements.first;
 
     expect(statement.expression, new isInstanceOf<Identifier>());
     Identifier ident = statement.expression;
@@ -57,14 +57,25 @@ void main() {
 
     expectNumStatements(program, 1);
 
-    expect(program.statements[0], new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement statement = program.statements[0];
+    expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement statement = program.statements.first;
     testIntegerLiteral(statement.expression, 5);
   });
 
   test("test parsing prefix expressions", () {
     testPrefix("!5;", "!", 5);
     testPrefix("-15;", "-", 15);
+  });
+
+  test("test parsing infix expressions", () {
+    testInfix("5 + 5;", 5, "+", 5);
+    testInfix("5 - 5;", 5, "-", 5);
+    testInfix("5 * 5;", 5, "*", 5);
+    testInfix("5 / 5;", 5, "/", 5);
+    testInfix("5 > 5;", 5, ">", 5);
+    testInfix("5 < 5;", 5, "<", 5);
+    testInfix("5 == 5;", 5, "==", 5);
+    testInfix("5 != 5;", 5, "!=", 5);
   });
 }
 
@@ -73,13 +84,28 @@ void testPrefix(String input, String operator, int integerValue) {
 
   expectNumStatements(program, 1);
 
-  expect(program.statements[0], new isInstanceOf<ExpressionStatement>());
-  ExpressionStatement statement = program.statements[0];
+  expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
+  ExpressionStatement statement = program.statements.first;
 
   expect(statement.expression, new isInstanceOf<PrefixExpression>());
   PrefixExpression expression = statement.expression;
   expect(expression.operator, equals(operator));
   testIntegerLiteral(expression.right, integerValue);
+}
+
+void testInfix(String input, int leftValue, String operator, int rightValue) {
+  Program program = parseProgramChecked(input);
+
+  expectNumStatements(program, 1);
+
+  expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
+  ExpressionStatement statement = program.statements.first;
+
+  expect(statement.expression, new isInstanceOf<InfixExpression>());
+  InfixExpression expression = statement.expression;
+  testIntegerLiteral(expression.left, leftValue);
+  expect(expression.operator, equals(operator));
+  testIntegerLiteral(expression.right, rightValue);
 }
 
 void testIntegerLiteral(Expression expression, int integerValue) {

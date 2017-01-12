@@ -28,14 +28,35 @@ class Parser {
   List<String> errors = [];
   Map<String, Function> prefixParseFns = {};
   Map<String, Function> infixParseFns = {};
+  Map<String, Precedence> precedences = {
+    Token.EQ: Precedence.EQUALS,
+    Token.NOT_EQ: Precedence.EQUALS,
+    Token.LT: Precedence.LESSGREATER,
+    Token.GT: Precedence.LESSGREATER,
+    Token.PLUS: Precedence.SUM,
+    Token.MINUS: Precedence.SUM,
+    Token.SLASH: Precedence.PRODUCT,
+    Token.ASTERISK: Precedence.PRODUCT
+  };
 
   Parser(this.lexer) {
     nextToken();
     nextToken();
+
     registerPrefix(Token.IDENT, parseIdentifier);
     registerPrefix(Token.INT, parseIntegerLiteral);
     registerPrefix(Token.BANG, parsePrefixExpression);
     registerPrefix(Token.MINUS, parsePrefixExpression);
+    registerPrefix(Token.MINUS, parsePrefixExpression);
+
+    registerInfix(Token.PLUS, parseInfixExpression);
+    registerInfix(Token.MINUS, parseInfixExpression);
+    registerInfix(Token.SLASH, parseInfixExpression);
+    registerInfix(Token.ASTERISK, parseInfixExpression);
+    registerInfix(Token.EQ, parseInfixExpression);
+    registerInfix(Token.NOT_EQ, parseInfixExpression);
+    registerInfix(Token.LT, parseInfixExpression);
+    registerInfix(Token.GT, parseInfixExpression);
   }
 
   void nextToken() {
@@ -116,7 +137,19 @@ class Parser {
       noPrefixParseFnError(currentToken.type);
       return null;
     }
-    return prefix();
+    Expression left = prefix();
+
+    while (!peekTokenIs(Token.SEMICOLON) &&
+        precedence.index < peekPrecendence().index) {
+      Function infix = infixParseFns[peekToken.type];
+      if (infix == null) {
+        return left;
+      }
+      nextToken();
+      left = infix(left);
+    }
+
+    return left;
   }
 
   bool currentTokenIs(String tokenType) {
@@ -137,8 +170,8 @@ class Parser {
   }
 
   void peekError(String tokenType) {
-    errors.add("expected next token to be $tokenType, but got ${currentToken
-        .type} instead");
+    errors.add("expected next token to be $tokenType, but got " +
+        "${currentToken.type} instead");
   }
 
   void noPrefixParseFnError(String tokenType) {
@@ -173,6 +206,21 @@ class Parser {
         new PrefixExpression(currentToken, currentToken.literal);
     nextToken();
     expression.right = parseExpression(Precedence.PREFIX);
+    return expression;
+  }
+
+  Precedence peekPrecendence() =>
+      precedences[peekToken.type] ?? Precedence.LOWEST;
+
+  Precedence currentPrecendence() =>
+      precedences[currentToken.type] ?? Precedence.LOWEST;
+
+  InfixExpression parseInfixExpression(Expression left) {
+    InfixExpression expression =
+        new InfixExpression(currentToken, currentToken.literal, left);
+    Precedence precedence = currentPrecendence();
+    nextToken();
+    expression.right = parseExpression(precedence);
     return expression;
   }
 }
