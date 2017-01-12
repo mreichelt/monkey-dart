@@ -51,7 +51,7 @@ class LetStatement extends Statement {
   String tokenLiteral() => token.literal;
 
   @override
-  String toString() => "$tokenLiteral $name = ${value ?? ''};";
+  String toString() => "${tokenLiteral()} $name = ${value ?? ''};";
 }
 
 class ReturnStatement extends Statement {
@@ -65,7 +65,7 @@ class ReturnStatement extends Statement {
   String tokenLiteral() => token.literal;
 
   @override
-  String toString() => "$tokenLiteral ${returnValue ?? ''};";
+  String toString() => "${tokenLiteral()} ${returnValue ?? ''};";
 }
 
 class ExpressionStatement extends Statement {
