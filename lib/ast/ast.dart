@@ -6,9 +6,23 @@ abstract class Node {
   String tokenLiteral();
 }
 
-abstract class Statement extends Node {}
+abstract class Statement extends Node {
+  Token token;
 
-abstract class Expression extends Node {}
+  Statement(this.token);
+
+  @override
+  String tokenLiteral() => token.literal;
+}
+
+abstract class Expression extends Node {
+  Token token;
+
+  Expression(this.token);
+
+  @override
+  String tokenLiteral() => token.literal;
+}
 
 class Program extends Node {
   List<Statement> statements;
@@ -26,70 +40,46 @@ class Program extends Node {
 }
 
 class Identifier extends Expression {
-  /** the IDENT token */
-  Token token;
   String value;
 
-  Identifier(this.token, this.value);
-
-  @override
-  String tokenLiteral() => token.literal;
+  Identifier(Token token, this.value) : super(token);
 
   @override
   String toString() => value;
 }
 
 class LetStatement extends Statement {
-  /** the LET token */
-  Token token;
   Identifier name;
   Expression value;
 
-  LetStatement(this.token);
-
-  @override
-  String tokenLiteral() => token.literal;
+  LetStatement(Token token) : super(token);
 
   @override
   String toString() => "${tokenLiteral()} $name = ${value ?? ''};";
 }
 
 class ReturnStatement extends Statement {
-  /** the 'return' token */
-  Token token;
   Expression returnValue;
 
-  ReturnStatement(this.token);
-
-  @override
-  String tokenLiteral() => token.literal;
+  ReturnStatement(Token token) : super(token);
 
   @override
   String toString() => "${tokenLiteral()} ${returnValue ?? ''};";
 }
 
 class ExpressionStatement extends Statement {
-  /** the first token of the expression */
-  Token token;
   Expression expression;
 
-  ExpressionStatement(this.token);
-
-  @override
-  String tokenLiteral() => token.literal;
+  ExpressionStatement(Token token) : super(token);
 
   @override
   String toString() => "${expression ?? ''}";
 }
 
 class IntegerLiteral extends Expression {
-  Token token;
   int value;
 
-  IntegerLiteral(this.token);
-
-  @override
-  String tokenLiteral() => token.literal;
+  IntegerLiteral(Token token) : super(token);
 
   @override
   String toString() => token.literal;
