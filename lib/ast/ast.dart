@@ -84,3 +84,13 @@ class IntegerLiteral extends Expression {
   @override
   String toString() => token.literal;
 }
+
+class PrefixExpression extends Expression {
+  String operator;
+  Expression right;
+
+  PrefixExpression(Token token, this.operator) : super(token);
+
+  @override
+  String toString() => "($operator$right)";
+}

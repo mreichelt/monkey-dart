@@ -34,6 +34,8 @@ class Parser {
     nextToken();
     registerPrefix(Token.IDENT, parseIdentifier);
     registerPrefix(Token.INT, parseIntegerLiteral);
+    registerPrefix(Token.BANG, parsePrefixExpression);
+    registerPrefix(Token.MINUS, parsePrefixExpression);
   }
 
   void nextToken() {
@@ -111,6 +113,7 @@ class Parser {
   Expression parseExpression(Precedence precedence) {
     Function prefix = prefixParseFns[currentToken.type];
     if (prefix == null) {
+      noPrefixParseFnError(currentToken.type);
       return null;
     }
     return prefix();
@@ -138,6 +141,10 @@ class Parser {
         .type} instead");
   }
 
+  void noPrefixParseFnError(String tokenType) {
+    errors.add("no prefix parse function for $tokenType found");
+  }
+
   void registerPrefix(String tokenType, Function prefixParseFn) {
     prefixParseFns[tokenType] = prefixParseFn;
   }
@@ -159,5 +166,13 @@ class Parser {
       errors.add("could not parse ${currentToken.literal} as integer");
       return null;
     }
+  }
+
+  PrefixExpression parsePrefixExpression() {
+    PrefixExpression expression =
+        new PrefixExpression(currentToken, currentToken.literal);
+    nextToken();
+    expression.right = parseExpression(Precedence.PREFIX);
+    return expression;
   }
 }
