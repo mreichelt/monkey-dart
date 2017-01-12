@@ -33,6 +33,7 @@ class Parser {
     nextToken();
     nextToken();
     registerPrefix(Token.IDENT, parseIdentifier);
+    registerPrefix(Token.INT, parseIntegerLiteral);
   }
 
   void nextToken() {
@@ -147,4 +148,16 @@ class Parser {
 
   Expression parseIdentifier() =>
       new Identifier(currentToken, currentToken.literal);
+
+  Expression parseIntegerLiteral() {
+    IntegerLiteral literal = new IntegerLiteral(currentToken);
+    try {
+      int value = int.parse(currentToken.literal);
+      literal.value = value;
+      return literal;
+    } catch (e) {
+      errors.add("could not parse ${currentToken.literal} as integer");
+      return null;
+    }
+  }
 }

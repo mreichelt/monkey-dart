@@ -5,15 +5,11 @@ import 'package:test/test.dart';
 
 void main() {
   test("test let statements", () {
-    String input = """
+    Program program = parseProgramChecked("""
       let x = 5;
       let y = 10;
       let foobar = 838383;
-   """;
-
-    Parser parser = new Parser(new Lexer(input));
-    Program program = parser.parseProgram();
-    checkParserErrors(parser);
+   """);
 
     expect(program, isNotNull, reason: "parseProgram() returned null");
 
@@ -27,15 +23,11 @@ void main() {
   });
 
   test("test return statements", () {
-    String input = """
+    Program program = parseProgramChecked("""
       return 5;
       return 10;
       return 993322;
-   """;
-
-    Parser parser = new Parser(new Lexer(input));
-    Program program = parser.parseProgram();
-    checkParserErrors(parser);
+   """);
 
     expectNumStatements(program, 3);
 
@@ -46,11 +38,7 @@ void main() {
   });
 
   test("test identifier expression", () {
-    String input = 'foobar;';
-
-    Parser parser = new Parser(new Lexer(input));
-    Program program = parser.parseProgram();
-    checkParserErrors(parser);
+    Program program = parseProgramChecked('foobar;');
 
     expectNumStatements(program, 1);
 
@@ -62,6 +50,21 @@ void main() {
 
     expect(ident.value, equals('foobar'));
     expect(ident.tokenLiteral(), equals('foobar'));
+  });
+
+  test("test literal integer expression", () {
+    Program program = parseProgramChecked('5;');
+
+    expectNumStatements(program, 1);
+
+    expect(program.statements[0], new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement statement = program.statements[0];
+
+    expect(statement.expression, new isInstanceOf<IntegerLiteral>());
+    IntegerLiteral literal = statement.expression;
+
+    expect(literal.value, equals(5));
+    expect(literal.tokenLiteral(), equals('5'));
   });
 }
 
@@ -91,4 +94,11 @@ void testLetStatement(Statement statement, String expectedIdentifier) {
   LetStatement letStatement = statement;
   expect(letStatement.name.value, equals(expectedIdentifier));
   expect(letStatement.name.tokenLiteral(), equals(expectedIdentifier));
+}
+
+Program parseProgramChecked(String input) {
+  Parser parser = new Parser(new Lexer(input));
+  Program program = parser.parseProgram();
+  checkParserErrors(parser);
+  return program;
 }

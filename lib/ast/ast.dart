@@ -81,3 +81,16 @@ class ExpressionStatement extends Statement {
   @override
   String toString() => "${expression ?? ''}";
 }
+
+class IntegerLiteral extends Expression {
+  Token token;
+  int value;
+
+  IntegerLiteral(this.token);
+
+  @override
+  String tokenLiteral() => token.literal;
+
+  @override
+  String toString() => token.literal;
+}
