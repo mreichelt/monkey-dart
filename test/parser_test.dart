@@ -93,6 +93,17 @@ void main() {
     testPrecedence("false", "false");
     testPrecedence("3 > 5 == false", "((3 > 5) == false)");
     testPrecedence("3 < 5 == true", "((3 < 5) == true)");
+    testPrecedence("1 + (2 + 3) + 4", "((1 + (2 + 3)) + 4)");
+    testPrecedence("(5 + 5) * 2", "((5 + 5) * 2)");
+    testPrecedence("2 / (5 + 5)", "(2 / (5 + 5))");
+    testPrecedence("(5 + 5) * 2 * (5 + 5)", "(((5 + 5) * 2) * (5 + 5))");
+    testPrecedence("-(5 + 5)", "(-(5 + 5))");
+    testPrecedence("!(true == true)", "(!(true == true))");
+//    testPrecedence("a + add(b * c) + d", "((a + add((b * c))) + d)");
+//    testPrecedence("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
+//        "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))");
+//    testPrecedence("add(a + b + c * d / f + g)",
+//        "add((((a + b) + ((c * d) / f)) + g))");
   });
 }
 

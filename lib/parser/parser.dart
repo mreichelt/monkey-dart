@@ -56,6 +56,7 @@ class Parser {
     registerPrefix(Token.MINUS, parsePrefixExpression);
     registerPrefix(Token.TRUE, parseBoolean);
     registerPrefix(Token.FALSE, parseBoolean);
+    registerPrefix(Token.LPAREN, parseGroupedExpression);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -235,4 +236,13 @@ class Parser {
 
   Boolean parseBoolean() =>
       new Boolean(currentToken, currentTokenIs(Token.TRUE));
+
+  Expression parseGroupedExpression() {
+    nextToken();
+    Expression expression = parseExpression(Precedence.LOWEST);
+    if (!expectPeek(Token.RPAREN)) {
+      return null;
+    }
+    return expression;
+  }
 }
