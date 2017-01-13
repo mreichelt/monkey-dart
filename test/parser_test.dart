@@ -5,66 +5,50 @@ import 'package:test/test.dart';
 
 void main() {
   test("test let statements", () {
-    Program program = parseProgramChecked("""
-      let x = 5;
-      let y = 10;
-      let foobar = 838383;
-   """);
-
-    expect(program, isNotNull, reason: "parseProgram() returned null");
-
-    expectNumStatements(program, 3);
-
-    List<String> identifiers = ['x', 'y', 'foobar'];
-    for (int i = 0; i < identifiers.length; i++) {
-      Statement statement = program.statements[i];
-      testLetStatement(statement, identifiers[i]);
-    }
+    testLetStatementParsing("let x = 5;", "x", 5);
+    testLetStatementParsing("let y = true;", "y", true);
+    testLetStatementParsing("let foobar = y;", "foobar", "y");
   });
 
   test("test return statements", () {
-    Program program = parseProgramChecked("""
-      return 5;
-      return 10;
-      return 993322;
-   """);
-
-    expectNumStatements(program, 3);
-
-    program.statements.forEach((statement) {
-      expect(statement, new isInstanceOf<ReturnStatement>());
-      expect(statement.tokenLiteral(), equals('return'));
-    });
+    testReturnStatementParsing("return 5;", 5);
+    testReturnStatementParsing("return true;", true);
+    testReturnStatementParsing("return foobar;", "foobar");
   });
 
   test("test identifier expression", () {
-    Program program = parseProgramChecked('foobar;');
+    Statement statement = parseSingleStatement('foobar;');
 
-    expectNumStatements(program, 1);
+    expect(statement, new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement expressionStatement = statement;
 
-    expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement statement = program.statements.first;
-
-    expect(statement.expression, new isInstanceOf<Identifier>());
-    Identifier ident = statement.expression;
+    expect(expressionStatement.expression, new isInstanceOf<Identifier>());
+    Identifier ident = expressionStatement.expression;
 
     expect(ident.value, equals('foobar'));
     expect(ident.tokenLiteral(), equals('foobar'));
   });
 
-  test("test literal integer expression", () {
-    Program program = parseProgramChecked('5;');
+  test('test literal integer expression', () {
+    Statement statement = parseSingleStatement('5;');
 
-    expectNumStatements(program, 1);
-
-    expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement statement = program.statements.first;
-    testIntegerLiteral(statement.expression, 5);
+    expect(statement, new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement expressionStatement = statement;
+    testIntegerLiteral(expressionStatement.expression, 5);
   });
 
-  test("test parsing prefix expressions", () {
+  test('test boolean expression', () {
+    testBooleanParsing("true;", true);
+    testBooleanParsing("false;", false);
+  });
+
+  test('test parsing prefix expressions', () {
     testPrefix("!5;", "!", 5);
     testPrefix("-15;", "-", 15);
+    testPrefix("!foobar;", "!", "foobar");
+    testPrefix("-foobar;", "-", "foobar");
+    testPrefix("!true;", "!", true);
+    testPrefix("!false;", "!", false);
   });
 
   test("test parsing infix expressions", () {
@@ -76,6 +60,17 @@ void main() {
     testInfix("5 < 5;", 5, "<", 5);
     testInfix("5 == 5;", 5, "==", 5);
     testInfix("5 != 5;", 5, "!=", 5);
+    testInfix("foobar + barfoo;", "foobar", "+", "barfoo");
+    testInfix("foobar - barfoo;", "foobar", "-", "barfoo");
+    testInfix("foobar * barfoo;", "foobar", "*", "barfoo");
+    testInfix("foobar / barfoo;", "foobar", "/", "barfoo");
+    testInfix("foobar > barfoo;", "foobar", ">", "barfoo");
+    testInfix("foobar < barfoo;", "foobar", "<", "barfoo");
+    testInfix("foobar == barfoo;", "foobar", "==", "barfoo");
+    testInfix("foobar != barfoo;", "foobar", "!=", "barfoo");
+    testInfix("true == true", true, "==", true);
+    testInfix("true != false", true, "!=", false);
+    testInfix("false == false", false, "==", false);
   });
 
   test("test operator precedence parsing", () {
@@ -94,10 +89,57 @@ void main() {
         "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
     testPrecedence(
         "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
+    testPrecedence("true", "true");
+    testPrecedence("false", "false");
+    testPrecedence("3 > 5 == false", "((3 > 5) == false)");
+    testPrecedence("3 < 5 == true", "((3 < 5) == true)");
   });
 }
 
-void testPrefix(String input, String operator, int integerValue) {
+void testBooleanParsing(String input, bool expected) {
+  Statement statement = parseSingleStatement(input);
+  expect(statement, new isInstanceOf<ExpressionStatement>());
+  ExpressionStatement expressionStatement = statement;
+  testBooleanLiteral(expressionStatement.expression, expected);
+}
+
+void testLetStatementParsing(
+    String input, String expectedIdentifier, Object expectedValue) {
+  Statement statement = parseSingleStatement(input);
+  testLetStatement(statement, expectedIdentifier);
+  testLiteralExpression((statement as LetStatement).value, expectedValue);
+}
+
+void testLetStatement(Statement statement, String name) {
+  expect(statement.tokenLiteral(), equals('let'));
+  expect(statement, new isInstanceOf<LetStatement>());
+  LetStatement letStatement = statement;
+  expect(letStatement.name.value, equals(name));
+  expect(letStatement.name.tokenLiteral(), equals(name));
+}
+
+void testReturnStatementParsing(String input, Object expectedValue) {
+  Statement statement = parseSingleStatement(input);
+  expect(statement.tokenLiteral(), equals('return'));
+  expect(statement, new isInstanceOf<ReturnStatement>());
+  ReturnStatement returnStatement = statement;
+  testLiteralExpression(returnStatement.returnValue, expectedValue);
+}
+
+Program parseProgramChecked(String input) {
+  Parser parser = new Parser(new Lexer(input));
+  Program program = parser.parseProgram();
+  checkParserErrors(parser);
+  return program;
+}
+
+Statement parseSingleStatement(String input) {
+  Program program = parseProgramChecked(input);
+  expectNumStatements(program, 1);
+  return program.statements.first;
+}
+
+void testPrefix(String input, String operator, Object expectedValue) {
   Program program = parseProgramChecked(input);
 
   expectNumStatements(program, 1);
@@ -108,22 +150,21 @@ void testPrefix(String input, String operator, int integerValue) {
   expect(statement.expression, new isInstanceOf<PrefixExpression>());
   PrefixExpression expression = statement.expression;
   expect(expression.operator, equals(operator));
-  testIntegerLiteral(expression.right, integerValue);
+  testLiteralExpression(expression.right, expectedValue);
 }
 
-void testInfix(String input, int leftValue, String operator, int rightValue) {
-  Program program = parseProgramChecked(input);
+void testInfix(
+    String input, Object leftValue, String operator, Object rightValue) {
+  Statement statement = parseSingleStatement(input);
 
-  expectNumStatements(program, 1);
+  expect(statement, new isInstanceOf<ExpressionStatement>());
+  ExpressionStatement expressionStatement = statement;
 
-  expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
-  ExpressionStatement statement = program.statements.first;
-
-  expect(statement.expression, new isInstanceOf<InfixExpression>());
-  InfixExpression expression = statement.expression;
-  testIntegerLiteral(expression.left, leftValue);
+  expect(expressionStatement.expression, new isInstanceOf<InfixExpression>());
+  InfixExpression expression = expressionStatement.expression;
+  testLiteralExpression(expression.left, leftValue);
   expect(expression.operator, equals(operator));
-  testIntegerLiteral(expression.right, rightValue);
+  testLiteralExpression(expression.right, rightValue);
 }
 
 void testPrecedence(String input, String expected) {
@@ -136,6 +177,42 @@ void testIntegerLiteral(Expression expression, int integerValue) {
   IntegerLiteral literal = expression;
   expect(literal.value, equals(integerValue));
   expect(literal.tokenLiteral(), equals("$integerValue"));
+}
+
+void testIdentifier(Expression expression, String value) {
+  expect(expression, new isInstanceOf<Identifier>());
+  Identifier identifier = expression;
+  expect(identifier.value, equals(value));
+  expect(identifier.tokenLiteral(), equals(value));
+}
+
+void testLiteralExpression(Expression expression, Object expected) {
+  if (expected is int) {
+    testIntegerLiteral(expression, expected);
+  } else if (expected is String) {
+    testIdentifier(expression, expected);
+  } else if (expected is bool) {
+    testBooleanLiteral(expression, expected);
+  } else {
+    fail("type of expression not handled: ${expected.runtimeType}");
+  }
+}
+
+void testBooleanLiteral(Expression expression, bool expected) {
+  expect(expression, new isInstanceOf<Boolean>());
+  Boolean boolean = expression;
+  expect(boolean.value, equals(expected));
+  expect(boolean.tokenLiteral(), equals(expected.toString()));
+}
+
+void testInfixExpression(
+    Expression expression, Object left, String operator, Object right) {
+  expect(expression, new isInstanceOf<InfixExpression>());
+
+  InfixExpression infixExpression = expression;
+  testLiteralExpression(infixExpression.left, left);
+  expect(infixExpression.operator, equals(operator));
+  testLiteralExpression(infixExpression.right, right);
 }
 
 void expectNumStatements(Program program, int expectedStatements) {
@@ -156,19 +233,4 @@ void checkParserErrors(Parser parser) {
   });
 
   fail('');
-}
-
-void testLetStatement(Statement statement, String expectedIdentifier) {
-  expect(statement.tokenLiteral(), equals('let'));
-
-  LetStatement letStatement = statement;
-  expect(letStatement.name.value, equals(expectedIdentifier));
-  expect(letStatement.name.tokenLiteral(), equals(expectedIdentifier));
-}
-
-Program parseProgramChecked(String input) {
-  Parser parser = new Parser(new Lexer(input));
-  Program program = parser.parseProgram();
-  checkParserErrors(parser);
-  return program;
 }

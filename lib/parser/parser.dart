@@ -54,6 +54,8 @@ class Parser {
     registerPrefix(Token.BANG, parsePrefixExpression);
     registerPrefix(Token.MINUS, parsePrefixExpression);
     registerPrefix(Token.MINUS, parsePrefixExpression);
+    registerPrefix(Token.TRUE, parseBoolean);
+    registerPrefix(Token.FALSE, parseBoolean);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -97,10 +99,12 @@ class Parser {
 
   ReturnStatement parseReturnStatement() {
     ReturnStatement statement = new ReturnStatement(currentToken);
+
     nextToken();
 
-    // TODO: We're skipping the expressions until we encounter a semicolon
-    while (!currentTokenIs(Token.SEMICOLON)) {
+    statement.returnValue = parseExpression(Precedence.LOWEST);
+
+    if (peekTokenIs(Token.SEMICOLON)) {
       nextToken();
     }
 
@@ -120,8 +124,11 @@ class Parser {
       return null;
     }
 
-    // TODO: We're skipping the expressions until we encounter a semicolon
-    while (!currentTokenIs(Token.SEMICOLON)) {
+    nextToken();
+
+    statement.value = parseExpression(Precedence.LOWEST);
+
+    if (peekTokenIs(Token.SEMICOLON)) {
       nextToken();
     }
 
@@ -158,13 +165,9 @@ class Parser {
     return left;
   }
 
-  bool currentTokenIs(String tokenType) {
-    return currentToken.type == tokenType;
-  }
+  bool currentTokenIs(String tokenType) => currentToken.type == tokenType;
 
-  bool peekTokenIs(String tokenType) {
-    return peekToken.type == tokenType;
-  }
+  bool peekTokenIs(String tokenType) => peekToken.type == tokenType;
 
   bool expectPeek(String tokenType) {
     if (peekToken.type == tokenType) {
@@ -229,4 +232,7 @@ class Parser {
     expression.right = parseExpression(precedence);
     return expression;
   }
+
+  Boolean parseBoolean() =>
+      new Boolean(currentToken, currentTokenIs(Token.TRUE));
 }
