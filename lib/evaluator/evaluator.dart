@@ -22,8 +22,35 @@ MonkeyObject eval(Node node) {
     var left = eval(node.left);
     var right = eval(node.right);
     return evalInfixExpression(node.operator, left, right);
+  } else if (node is BlockStatement) {
+    return evalStatements(node.statements);
+  } else if (node is IfExpression) {
+    return evalIfExpression(node);
   }
   return null;
+}
+
+MonkeyObject evalIfExpression(IfExpression expression) {
+  MonkeyObject condition = eval(expression.condition);
+  if (isTruthy(condition)) {
+    return eval(expression.consequence);
+  } else if (expression.alternative != null) {
+    return eval(expression.alternative);
+  } else {
+    return NULL;
+  }
+}
+
+bool isTruthy(MonkeyObject condition) {
+  if (condition == NULL) {
+    return false;
+  } else if (condition == TRUE) {
+    return true;
+  } else if (condition == FALSE) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 MonkeyObject evalInfixExpression(

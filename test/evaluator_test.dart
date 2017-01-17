@@ -53,6 +53,16 @@ void main() {
     testBangOperator('!!false', false);
     testBangOperator('!!5', true);
   });
+
+  test('test if/else expressions', () {
+    testIfElse('if (true) { 10 }', 10);
+    testIfElse('if (false) { 10 }', null);
+    testIfElse('if (1) { 10 }', 10);
+    testIfElse('if (1 < 2) { 10 }', 10);
+    testIfElse('if (1 > 2) { 10 }', null);
+    testIfElse('if (1 > 2) { 10 } else { 20 }', 20);
+    testIfElse('if (1 < 2) { 10 } else { 20 }', 10);
+  });
 }
 
 void testEvalInteger(String input, int expected) {
@@ -68,6 +78,19 @@ void testEvalBoolean(String input, bool expected) {
 void testBangOperator(String input, bool expected) {
   MonkeyObject evaluated = testEval(input);
   testBooleanObject(evaluated, expected);
+}
+
+void testIfElse(String input, Object expected) {
+  MonkeyObject evaluated = testEval(input);
+  if (expected is int) {
+    testIntegerObject(evaluated, expected);
+  } else {
+    testNullObject(evaluated);
+  }
+}
+
+void testNullObject(MonkeyObject object) {
+  expect(object, equals(NULL));
 }
 
 void testIntegerObject(MonkeyObject object, int expected) {
