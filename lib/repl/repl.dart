@@ -3,7 +3,22 @@ library repl;
 import 'dart:io';
 
 import 'package:monkey_dart/lexer/lexer.dart';
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_dart/parser/parser.dart';
+import 'package:monkey_dart/ast/ast.dart';
+
+const MONKEY_FACE = r"""            __,__
+   .--.  .-"     "-.  .--.
+  / .. \/  .-. .-.  \/ .. \
+ | |  '|  /   Y   \  |'  | |
+ | \   \  \ 0 | 0 /  /   / |
+  \ '- ,\.-""" +
+    '"""""""' +
+    """-./, -' /
+   ''-' /_   ^ ^   _\\ '-''
+       |  \\._   _./  |
+       \\   \\ '~' /   /
+        '._ '-=-' _.'
+           '-----'""";
 
 void start() {
   const String prompt = '>> ';
@@ -15,13 +30,24 @@ void start() {
       return;
     }
 
-    Lexer lexer = new Lexer(inputText);
-    for (Token token = lexer.nextToken();
-        token.type != Token.EOF;
-        token = lexer.nextToken()) {
-      print(token);
+    Parser parser = new Parser(new Lexer(inputText));
+    Program program = parser.parseProgram();
+    if (parser.errors.isNotEmpty) {
+      printParserErrors(parser.errors);
+      continue;
     }
+
+    print(program);
   }
+}
+
+void printParserErrors(List<String> errors) {
+  print(MONKEY_FACE);
+  print('Woops! We ran into some monkey business here!');
+  print(' parser errors:');
+  errors.forEach((error) {
+    print('\t$error');
+  });
 }
 
 void main() {
