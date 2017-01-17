@@ -273,8 +273,8 @@ void testLiteralExpression(Expression expression, Object expected) {
 }
 
 void testBooleanLiteral(Expression expression, bool expected) {
-  expect(expression, new isInstanceOf<Boolean>());
-  Boolean boolean = expression;
+  expect(expression, new isInstanceOf<BooleanLiteral>());
+  BooleanLiteral boolean = expression;
   expect(boolean.value, equals(expected));
   expect(boolean.tokenLiteral(), equals(expected.toString()));
 }

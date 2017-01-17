@@ -237,8 +237,8 @@ class Parser {
     return expression;
   }
 
-  Boolean parseBoolean() =>
-      new Boolean(currentToken, currentTokenIs(Token.TRUE));
+  BooleanLiteral parseBoolean() =>
+      new BooleanLiteral(currentToken, currentTokenIs(Token.TRUE));
 
   Expression parseGroupedExpression() {
     nextToken();

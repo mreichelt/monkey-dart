@@ -9,6 +9,11 @@ void main() {
     testEvalInteger('5', 5);
     testEvalInteger('10', 10);
   });
+
+  test('test eval boolean expression', () {
+    testEvalBoolean('true', true);
+    testEvalBoolean('false', false);
+  });
 }
 
 void testEvalInteger(String input, int expected) {
@@ -16,13 +21,24 @@ void testEvalInteger(String input, int expected) {
   testIntegerObject(evaluated, expected);
 }
 
-MonkeyObject testEval(String input) {
-  Parser parser = new Parser(new Lexer(input));
-  return eval(parser.parseProgram());
+void testEvalBoolean(String input, bool expected) {
+  MonkeyObject evaluated = testEval(input);
+  testBooleanObject(evaluated, expected);
 }
 
 void testIntegerObject(MonkeyObject object, int expected) {
   expect(object, new isInstanceOf<Integer>());
   Integer integer = object;
   expect(integer.value, equals(expected));
+}
+
+void testBooleanObject(MonkeyObject object, bool expected) {
+  expect(object, new isInstanceOf<Boolean>());
+  Boolean boolean = object;
+  expect(boolean.value, equals(expected));
+}
+
+MonkeyObject testEval(String input) {
+  Parser parser = new Parser(new Lexer(input));
+  return eval(parser.parseProgram());
 }

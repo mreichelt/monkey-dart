@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:monkey_dart/ast/ast.dart';
 import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:monkey_dart/parser/parser.dart';
+import 'package:monkey_dart/object/object.dart';
+import 'package:monkey_dart/evaluator/evaluator.dart';
 
 const MONKEY_FACE = r"""            __,__
    .--.  .-"     "-.  .--.
@@ -37,7 +39,10 @@ void start() {
       continue;
     }
 
-    print(program);
+    MonkeyObject evaluated = eval(program);
+    if (evaluated != null) {
+      print(evaluated.inspect());
+    }
   }
 }
 

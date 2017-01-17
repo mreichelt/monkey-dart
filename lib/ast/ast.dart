@@ -106,10 +106,10 @@ class InfixExpression extends Expression {
   String toString() => '($left $operator $right)';
 }
 
-class Boolean extends Expression {
+class BooleanLiteral extends Expression {
   bool value;
 
-  Boolean(Token token, this.value) : super(token);
+  BooleanLiteral(Token token, this.value) : super(token);
 
   @override
   String toString() => token.literal;

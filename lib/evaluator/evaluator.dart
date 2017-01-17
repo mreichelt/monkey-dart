@@ -10,6 +10,8 @@ MonkeyObject eval(Node node) {
     return eval(node.expression);
   } else if (node is IntegerLiteral) {
     return new Integer(node.value);
+  } else if (node is BooleanLiteral) {
+    return new Boolean(node.value);
   }
   return null;
 }
