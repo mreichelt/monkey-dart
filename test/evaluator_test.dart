@@ -26,6 +26,23 @@ void main() {
   test('test eval boolean expression', () {
     testEvalBoolean('true', true);
     testEvalBoolean('false', false);
+    testEvalBoolean('1 < 2', true);
+    testEvalBoolean('1 > 2', false);
+    testEvalBoolean('1 < 1', false);
+    testEvalBoolean('1 > 1', false);
+    testEvalBoolean('1 == 1', true);
+    testEvalBoolean('1 != 1', false);
+    testEvalBoolean('1 == 2', false);
+    testEvalBoolean('1 != 2', true);
+    testEvalBoolean('true == true', true);
+    testEvalBoolean('false == false', true);
+    testEvalBoolean('true == false', false);
+    testEvalBoolean('true != false', true);
+    testEvalBoolean('false != true', true);
+    testEvalBoolean('(1 < 2) == true', true);
+    testEvalBoolean('(1 < 2) == false', false);
+    testEvalBoolean('(1 > 2) == true', false);
+    testEvalBoolean('(1 > 2) == false', true);
   });
 
   test('test bang operator', () {

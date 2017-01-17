@@ -30,6 +30,10 @@ MonkeyObject evalInfixExpression(
     String operator, MonkeyObject left, MonkeyObject right) {
   if (left.type == INTEGER_OBJ && right.type == INTEGER_OBJ) {
     return evalIntegerInfixExpression(operator, left, right);
+  } else if (operator == '==') {
+    return nativeBoolToBooleanObject(left == right);
+  } else if (operator == '!=') {
+    return nativeBoolToBooleanObject(left != right);
   } else {
     return NULL;
   }
@@ -46,6 +50,14 @@ MonkeyObject evalIntegerInfixExpression(
       return new Integer(left.value * right.value);
     case '/':
       return new Integer(left.value ~/ right.value);
+    case '<':
+      return nativeBoolToBooleanObject(left.value < right.value);
+    case '>':
+      return nativeBoolToBooleanObject(left.value > right.value);
+    case '==':
+      return nativeBoolToBooleanObject(left.value == right.value);
+    case '!=':
+      return nativeBoolToBooleanObject(left.value != right.value);
     default:
       return NULL;
   }
