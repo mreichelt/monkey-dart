@@ -105,13 +105,39 @@ void main() {
 //    testPrecedence("add(a + b + c * d / f + g)",
 //        "add((((a + b) + ((c * d) / f)) + g))");
   });
+
+  test('test if expression', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('if (x < y) { x }');
+    expect(statement.expression, new isInstanceOf<IfExpression>());
+    IfExpression expression = statement.expression;
+    testInfixExpression(expression.condition, "x", "<", "y");
+    expect(expression.consequence.statements.length, equals(1));
+    ExpressionStatement consequence = expression.consequence.statements.first;
+    testIdentifier(consequence.expression, "x");
+    expect(expression.alternative, isNull);
+  });
+
+  test('test if/else expression', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('if (x < y) { x } else { y }');
+    expect(statement.expression, new isInstanceOf<IfExpression>());
+    IfExpression expression = statement.expression;
+    testInfixExpression(expression.condition, "x", "<", "y");
+
+    expect(expression.consequence.statements.length, equals(1));
+    ExpressionStatement consequence = expression.consequence.statements.first;
+    testIdentifier(consequence.expression, "x");
+
+    expect(expression.alternative.statements.length, equals(1));
+    ExpressionStatement alternative = expression.alternative.statements.first;
+    testIdentifier(alternative.expression, "y");
+  });
 }
 
 void testBooleanParsing(String input, bool expected) {
-  Statement statement = parseSingleStatement(input);
-  expect(statement, new isInstanceOf<ExpressionStatement>());
-  ExpressionStatement expressionStatement = statement;
-  testBooleanLiteral(expressionStatement.expression, expected);
+  ExpressionStatement statement = parseExpressionStatement(input);
+  testBooleanLiteral(statement.expression, expected);
 }
 
 void testLetStatementParsing(
@@ -150,6 +176,13 @@ Statement parseSingleStatement(String input) {
   return program.statements.first;
 }
 
+ExpressionStatement parseExpressionStatement(String input) {
+  Statement statement = parseSingleStatement(input);
+  expect(statement, new isInstanceOf<ExpressionStatement>());
+  ExpressionStatement expressionStatement = statement;
+  return expressionStatement;
+}
+
 void testPrefix(String input, String operator, Object expectedValue) {
   Program program = parseProgramChecked(input);
 
@@ -166,11 +199,7 @@ void testPrefix(String input, String operator, Object expectedValue) {
 
 void testInfix(
     String input, Object leftValue, String operator, Object rightValue) {
-  Statement statement = parseSingleStatement(input);
-
-  expect(statement, new isInstanceOf<ExpressionStatement>());
-  ExpressionStatement expressionStatement = statement;
-
+  ExpressionStatement expressionStatement = parseExpressionStatement(input);
   expect(expressionStatement.expression, new isInstanceOf<InfixExpression>());
   InfixExpression expression = expressionStatement.expression;
   testLiteralExpression(expression.left, leftValue);

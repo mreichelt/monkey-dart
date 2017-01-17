@@ -114,3 +114,25 @@ class Boolean extends Expression {
   @override
   String toString() => token.literal;
 }
+
+class IfExpression extends Expression {
+  Expression condition;
+  BlockStatement consequence;
+  BlockStatement alternative;
+
+  IfExpression(Token token) : super(token);
+
+  @override
+  String toString() => "if$condition $consequence ${alternative == null
+      ? ""
+      : "else $alternative"}";
+}
+
+class BlockStatement extends Statement {
+  List<Statement> statements = [];
+
+  BlockStatement(Token token) : super(token);
+
+  @override
+  String toString() => statements.join();
+}

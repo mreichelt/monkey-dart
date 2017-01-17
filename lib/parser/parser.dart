@@ -57,6 +57,7 @@ class Parser {
     registerPrefix(Token.TRUE, parseBoolean);
     registerPrefix(Token.FALSE, parseBoolean);
     registerPrefix(Token.LPAREN, parseGroupedExpression);
+    registerPrefix(Token.IF, parseIfExpression);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -244,5 +245,49 @@ class Parser {
       return null;
     }
     return expression;
+  }
+
+  IfExpression parseIfExpression() {
+    IfExpression expression = new IfExpression(currentToken);
+    if (!expectPeek(Token.LPAREN)) {
+      return null;
+    }
+
+    nextToken();
+    expression.condition = parseExpression(Precedence.LOWEST);
+
+    if (!expectPeek(Token.RPAREN)) {
+      return null;
+    }
+    if (!expectPeek(Token.LBRACE)) {
+      return null;
+    }
+
+    expression.consequence = parseBlockStatement();
+
+    if (peekTokenIs(Token.ELSE)) {
+      nextToken();
+
+      if (!expectPeek(Token.LBRACE)) {
+        return null;
+      }
+
+      expression.alternative = parseBlockStatement();
+    }
+
+    return expression;
+  }
+
+  BlockStatement parseBlockStatement() {
+    BlockStatement block = new BlockStatement(currentToken);
+    nextToken();
+    while (!currentTokenIs(Token.RBRACE)) {
+      Statement statement = parseStatement();
+      if (statement != null) {
+        block.statements.add(statement);
+      }
+      nextToken();
+    }
+    return block;
   }
 }
