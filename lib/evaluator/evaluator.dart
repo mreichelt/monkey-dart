@@ -26,6 +26,8 @@ MonkeyObject evalPrefixExpression(String operator, MonkeyObject right) {
   switch (operator) {
     case '!':
       return evalBangOperatorExpression(right);
+    case '-':
+      return evalMinusPrefixOperatorExpression(right);
     default:
       return NULL;
   }
@@ -41,6 +43,13 @@ MonkeyObject evalBangOperatorExpression(MonkeyObject right) {
   } else {
     return FALSE;
   }
+}
+
+MonkeyObject evalMinusPrefixOperatorExpression(MonkeyObject right) {
+  if (right.type != INTEGER_OBJ) {
+    return NULL;
+  }
+  return new Integer(-(right as Integer).value);
 }
 
 Boolean nativeBoolToBooleanObject(bool value) => value ? TRUE : FALSE;

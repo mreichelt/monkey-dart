@@ -8,6 +8,8 @@ void main() {
   test('test eval integer expression', () {
     testEvalInteger('5', 5);
     testEvalInteger('10', 10);
+    testEvalInteger('-5', -5);
+    testEvalInteger('-10', -10);
   });
 
   test('test eval boolean expression', () {
