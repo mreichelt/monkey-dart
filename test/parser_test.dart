@@ -17,24 +17,18 @@ void main() {
   });
 
   test("test identifier expression", () {
-    Statement statement = parseSingleStatement('foobar;');
+    ExpressionStatement statement = parseExpressionStatement('foobar;');
 
-    expect(statement, new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement expressionStatement = statement;
-
-    expect(expressionStatement.expression, new isInstanceOf<Identifier>());
-    Identifier ident = expressionStatement.expression;
+    expect(statement.expression, new isInstanceOf<Identifier>());
+    Identifier ident = statement.expression;
 
     expect(ident.value, equals('foobar'));
     expect(ident.tokenLiteral(), equals('foobar'));
   });
 
   test('test literal integer expression', () {
-    Statement statement = parseSingleStatement('5;');
-
-    expect(statement, new isInstanceOf<ExpressionStatement>());
-    ExpressionStatement expressionStatement = statement;
-    testIntegerLiteral(expressionStatement.expression, 5);
+    ExpressionStatement statement = parseExpressionStatement('5;');
+    testIntegerLiteral(statement.expression, 5);
   });
 
   test('test boolean expression', () {
@@ -184,13 +178,7 @@ ExpressionStatement parseExpressionStatement(String input) {
 }
 
 void testPrefix(String input, String operator, Object expectedValue) {
-  Program program = parseProgramChecked(input);
-
-  expectNumStatements(program, 1);
-
-  expect(program.statements.first, new isInstanceOf<ExpressionStatement>());
-  ExpressionStatement statement = program.statements.first;
-
+  ExpressionStatement statement = parseExpressionStatement(input);
   expect(statement.expression, new isInstanceOf<PrefixExpression>());
   PrefixExpression expression = statement.expression;
   expect(expression.operator, equals(operator));
