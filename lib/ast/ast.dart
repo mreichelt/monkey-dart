@@ -136,3 +136,13 @@ class BlockStatement extends Statement {
   @override
   String toString() => statements.join();
 }
+
+class FunctionLiteral extends Expression {
+  List<Identifier> parameters = [];
+  BlockStatement body;
+
+  FunctionLiteral(Token token) : super(token);
+
+  @override
+  String toString() => "${tokenLiteral()}(${parameters.join(", ")})$body";
+}

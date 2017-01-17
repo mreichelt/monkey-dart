@@ -127,6 +127,23 @@ void main() {
     ExpressionStatement alternative = expression.alternative.statements.first;
     testIdentifier(alternative.expression, "y");
   });
+
+  test('test function literal parsing', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('fn(x, y) { x + y; }');
+    expect(statement.expression, new isInstanceOf<FunctionLiteral>());
+    FunctionLiteral function = statement.expression;
+
+    expect(function.parameters.length, equals(2));
+    testLiteralExpression(function.parameters[0], "x");
+    testLiteralExpression(function.parameters[1], "y");
+
+    expect(function.body.statements.length, equals(1));
+    expect(function.body.statements.first,
+        new isInstanceOf<ExpressionStatement>());
+    ExpressionStatement body = function.body.statements.first;
+    testInfixExpression(body.expression, "x", "+", "y");
+  });
 }
 
 void testBooleanParsing(String input, bool expected) {

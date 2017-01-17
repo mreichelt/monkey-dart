@@ -58,6 +58,7 @@ class Parser {
     registerPrefix(Token.FALSE, parseBoolean);
     registerPrefix(Token.LPAREN, parseGroupedExpression);
     registerPrefix(Token.IF, parseIfExpression);
+    registerPrefix(Token.FUNCTION, parseFunctionLiteral);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -289,5 +290,43 @@ class Parser {
       nextToken();
     }
     return block;
+  }
+
+  FunctionLiteral parseFunctionLiteral() {
+    FunctionLiteral function = new FunctionLiteral(currentToken);
+    if (!expectPeek(Token.LPAREN)) {
+      return null;
+    }
+    function.parameters = parseFunctionParameters();
+    if (!expectPeek(Token.LBRACE)) {
+      return null;
+    }
+    function.body = parseBlockStatement();
+    return function;
+  }
+
+  List<Identifier> parseFunctionParameters() {
+    List<Identifier> parameters = [];
+
+    if (peekTokenIs(Token.RPAREN)) {
+      nextToken();
+      return parameters;
+    }
+
+    nextToken();
+
+    parameters.add(new Identifier(currentToken, currentToken.literal));
+
+    while (peekTokenIs(Token.COMMA)) {
+      nextToken();
+      nextToken();
+      parameters.add(new Identifier(currentToken, currentToken.literal));
+    }
+
+    if (!expectPeek(Token.RPAREN)) {
+      return null;
+    }
+
+    return parameters;
   }
 }
