@@ -11,33 +11,33 @@ void testLexer(List<Token> expected, String input) {
   for (int i = 0; i < expected.length; i++) {
     Token expectedToken = expected[i];
     Token actualToken = lexer.nextToken();
-    print("${actualToken.literal} ");
+    print('${actualToken.literal} ');
     expect(actualToken.type, expectedToken.type,
-        reason: "tests[$i] - tokentype wrong");
+        reason: 'tests[$i] - tokentype wrong');
     expect(actualToken.literal, expectedToken.literal,
-        reason: "tests[$i] - literal wrong");
+        reason: 'tests[$i] - literal wrong');
   }
 }
 
 void main() {
-  test("test lexer with input =+(){},;", () {
-    String input = "=+(){},;";
+  test('test lexer with input =+(){},;', () {
+    String input = '=+(){},;';
     List<Token> expected = [
-      t(Token.ASSIGN, "="),
-      t(Token.PLUS, "+"),
-      t(Token.LPAREN, "("),
-      t(Token.RPAREN, ")"),
-      t(Token.LBRACE, "{"),
-      t(Token.RBRACE, "}"),
-      t(Token.COMMA, ","),
-      t(Token.SEMICOLON, ";"),
-      t(Token.EOF, "")
+      t(Token.ASSIGN, '='),
+      t(Token.PLUS, '+'),
+      t(Token.LPAREN, '('),
+      t(Token.RPAREN, ')'),
+      t(Token.LBRACE, '{'),
+      t(Token.RBRACE, '}'),
+      t(Token.COMMA, ','),
+      t(Token.SEMICOLON, ';'),
+      t(Token.EOF, '')
     ];
 
     testLexer(expected, input);
   });
 
-  test("test monkey language tokens", () {
+  test('test monkey language tokens', () {
     String input = """
       let five = 5;
       let ten = 10;
@@ -58,80 +58,80 @@ void main() {
       10 != 9;
     """;
     List<Token> expected = [
-      t(Token.LET, "let"),
-      t(Token.IDENT, "five"),
-      t(Token.ASSIGN, "="),
-      t(Token.INT, "5"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.LET, "let"),
-      t(Token.IDENT, "ten"),
-      t(Token.ASSIGN, "="),
-      t(Token.INT, "10"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.LET, "let"),
-      t(Token.IDENT, "add"),
-      t(Token.ASSIGN, "="),
-      t(Token.FUNCTION, "fn"),
-      t(Token.LPAREN, "("),
-      t(Token.IDENT, "x"),
-      t(Token.COMMA, ","),
-      t(Token.IDENT, "y"),
-      t(Token.RPAREN, ")"),
-      t(Token.LBRACE, "{"),
-      t(Token.IDENT, "x"),
-      t(Token.PLUS, "+"),
-      t(Token.IDENT, "y"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.RBRACE, "}"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.LET, "let"),
-      t(Token.IDENT, "result"),
-      t(Token.ASSIGN, "="),
-      t(Token.IDENT, "add"),
-      t(Token.LPAREN, "("),
-      t(Token.IDENT, "five"),
-      t(Token.COMMA, ","),
-      t(Token.IDENT, "ten"),
-      t(Token.RPAREN, ")"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.BANG, "!"),
-      t(Token.MINUS, "-"),
-      t(Token.SLASH, "/"),
-      t(Token.ASTERISK, "*"),
-      t(Token.INT, "5"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.INT, "5"),
-      t(Token.LT, "<"),
-      t(Token.INT, "10"),
-      t(Token.GT, ">"),
-      t(Token.INT, "5"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.IF, "if"),
-      t(Token.LPAREN, "("),
-      t(Token.INT, "5"),
-      t(Token.LT, "<"),
-      t(Token.INT, "10"),
-      t(Token.RPAREN, ")"),
-      t(Token.LBRACE, "{"),
-      t(Token.RETURN, "return"),
-      t(Token.TRUE, "true"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.RBRACE, "}"),
-      t(Token.ELSE, "else"),
-      t(Token.LBRACE, "{"),
-      t(Token.RETURN, "return"),
-      t(Token.FALSE, "false"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.RBRACE, "}"),
-      t(Token.INT, "10"),
-      t(Token.EQ, "=="),
-      t(Token.INT, "10"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.INT, "10"),
-      t(Token.NOT_EQ, "!="),
-      t(Token.INT, "9"),
-      t(Token.SEMICOLON, ";"),
-      t(Token.EOF, "")
+      t(Token.LET, 'let'),
+      t(Token.IDENT, 'five'),
+      t(Token.ASSIGN, '='),
+      t(Token.INT, '5'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.LET, 'let'),
+      t(Token.IDENT, 'ten'),
+      t(Token.ASSIGN, '='),
+      t(Token.INT, '10'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.LET, 'let'),
+      t(Token.IDENT, 'add'),
+      t(Token.ASSIGN, '='),
+      t(Token.FUNCTION, 'fn'),
+      t(Token.LPAREN, '('),
+      t(Token.IDENT, 'x'),
+      t(Token.COMMA, ','),
+      t(Token.IDENT, 'y'),
+      t(Token.RPAREN, ')'),
+      t(Token.LBRACE, '{'),
+      t(Token.IDENT, 'x'),
+      t(Token.PLUS, '+'),
+      t(Token.IDENT, 'y'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.RBRACE, '}'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.LET, 'let'),
+      t(Token.IDENT, 'result'),
+      t(Token.ASSIGN, '='),
+      t(Token.IDENT, 'add'),
+      t(Token.LPAREN, '('),
+      t(Token.IDENT, 'five'),
+      t(Token.COMMA, ','),
+      t(Token.IDENT, 'ten'),
+      t(Token.RPAREN, ')'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.BANG, '!'),
+      t(Token.MINUS, '-'),
+      t(Token.SLASH, '/'),
+      t(Token.ASTERISK, '*'),
+      t(Token.INT, '5'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.INT, '5'),
+      t(Token.LT, '<'),
+      t(Token.INT, '10'),
+      t(Token.GT, '>'),
+      t(Token.INT, '5'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.IF, 'if'),
+      t(Token.LPAREN, '('),
+      t(Token.INT, '5'),
+      t(Token.LT, '<'),
+      t(Token.INT, '10'),
+      t(Token.RPAREN, ')'),
+      t(Token.LBRACE, '{'),
+      t(Token.RETURN, 'return'),
+      t(Token.TRUE, 'true'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.RBRACE, '}'),
+      t(Token.ELSE, 'else'),
+      t(Token.LBRACE, '{'),
+      t(Token.RETURN, 'return'),
+      t(Token.FALSE, 'false'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.RBRACE, '}'),
+      t(Token.INT, '10'),
+      t(Token.EQ, '=='),
+      t(Token.INT, '10'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.INT, '10'),
+      t(Token.NOT_EQ, '!='),
+      t(Token.INT, '9'),
+      t(Token.SEMICOLON, ';'),
+      t(Token.EOF, '')
     ];
 
     testLexer(expected, input);

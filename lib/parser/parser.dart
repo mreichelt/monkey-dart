@@ -182,12 +182,12 @@ class Parser {
   }
 
   void peekError(String tokenType) {
-    errors.add("expected next token to be $tokenType, but got " +
-        "${currentToken.type} instead");
+    errors.add('expected next token to be $tokenType, but got '
+        '${currentToken.type} instead');
   }
 
   void noPrefixParseFnError(String tokenType) {
-    errors.add("no prefix parse function for $tokenType found");
+    errors.add('no prefix parse function for $tokenType found');
   }
 
   void registerPrefix(String tokenType, Function prefixParseFn) {
@@ -208,7 +208,7 @@ class Parser {
       literal.value = value;
       return literal;
     } catch (e) {
-      errors.add("could not parse ${currentToken.literal} as integer");
+      errors.add('could not parse ${currentToken.literal} as integer');
       return null;
     }
   }

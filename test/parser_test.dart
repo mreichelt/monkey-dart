@@ -4,19 +4,19 @@ import 'package:monkey_dart/parser/parser.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("test let statements", () {
-    testLetStatementParsing("let x = 5;", "x", 5);
-    testLetStatementParsing("let y = true;", "y", true);
-    testLetStatementParsing("let foobar = y;", "foobar", "y");
+  test('test let statements', () {
+    testLetStatementParsing('let x = 5;', 'x', 5);
+    testLetStatementParsing('let y = true;', 'y', true);
+    testLetStatementParsing('let foobar = y;', 'foobar', 'y');
   });
 
-  test("test return statements", () {
-    testReturnStatementParsing("return 5;", 5);
-    testReturnStatementParsing("return true;", true);
-    testReturnStatementParsing("return foobar;", "foobar");
+  test('test return statements', () {
+    testReturnStatementParsing('return 5;', 5);
+    testReturnStatementParsing('return true;', true);
+    testReturnStatementParsing('return foobar;', 'foobar');
   });
 
-  test("test identifier expression", () {
+  test('test identifier expression', () {
     ExpressionStatement statement = parseExpressionStatement('foobar;');
 
     expect(statement.expression, new isInstanceOf<Identifier>());
@@ -32,72 +32,72 @@ void main() {
   });
 
   test('test boolean expression', () {
-    testBooleanParsing("true;", true);
-    testBooleanParsing("false;", false);
+    testBooleanParsing('true;', true);
+    testBooleanParsing('false;', false);
   });
 
   test('test parsing prefix expressions', () {
-    testPrefix("!5;", "!", 5);
-    testPrefix("-15;", "-", 15);
-    testPrefix("!foobar;", "!", "foobar");
-    testPrefix("-foobar;", "-", "foobar");
-    testPrefix("!true;", "!", true);
-    testPrefix("!false;", "!", false);
+    testPrefix('!5;', '!', 5);
+    testPrefix('-15;', '-', 15);
+    testPrefix('!foobar;', '!', 'foobar');
+    testPrefix('-foobar;', '-', 'foobar');
+    testPrefix('!true;', '!', true);
+    testPrefix('!false;', '!', false);
   });
 
-  test("test parsing infix expressions", () {
-    testInfix("5 + 5;", 5, "+", 5);
-    testInfix("5 - 5;", 5, "-", 5);
-    testInfix("5 * 5;", 5, "*", 5);
-    testInfix("5 / 5;", 5, "/", 5);
-    testInfix("5 > 5;", 5, ">", 5);
-    testInfix("5 < 5;", 5, "<", 5);
-    testInfix("5 == 5;", 5, "==", 5);
-    testInfix("5 != 5;", 5, "!=", 5);
-    testInfix("foobar + barfoo;", "foobar", "+", "barfoo");
-    testInfix("foobar - barfoo;", "foobar", "-", "barfoo");
-    testInfix("foobar * barfoo;", "foobar", "*", "barfoo");
-    testInfix("foobar / barfoo;", "foobar", "/", "barfoo");
-    testInfix("foobar > barfoo;", "foobar", ">", "barfoo");
-    testInfix("foobar < barfoo;", "foobar", "<", "barfoo");
-    testInfix("foobar == barfoo;", "foobar", "==", "barfoo");
-    testInfix("foobar != barfoo;", "foobar", "!=", "barfoo");
-    testInfix("true == true", true, "==", true);
-    testInfix("true != false", true, "!=", false);
-    testInfix("false == false", false, "==", false);
+  test('test parsing infix expressions', () {
+    testInfix('5 + 5;', 5, '+', 5);
+    testInfix('5 - 5;', 5, '-', 5);
+    testInfix('5 * 5;', 5, '*', 5);
+    testInfix('5 / 5;', 5, '/', 5);
+    testInfix('5 > 5;', 5, '>', 5);
+    testInfix('5 < 5;', 5, '<', 5);
+    testInfix('5 == 5;', 5, '==', 5);
+    testInfix('5 != 5;', 5, '!=', 5);
+    testInfix('foobar + barfoo;', 'foobar', '+', 'barfoo');
+    testInfix('foobar - barfoo;', 'foobar', '-', 'barfoo');
+    testInfix('foobar * barfoo;', 'foobar', '*', 'barfoo');
+    testInfix('foobar / barfoo;', 'foobar', '/', 'barfoo');
+    testInfix('foobar > barfoo;', 'foobar', '>', 'barfoo');
+    testInfix('foobar < barfoo;', 'foobar', '<', 'barfoo');
+    testInfix('foobar == barfoo;', 'foobar', '==', 'barfoo');
+    testInfix('foobar != barfoo;', 'foobar', '!=', 'barfoo');
+    testInfix('true == true', true, '==', true);
+    testInfix('true != false', true, '!=', false);
+    testInfix('false == false', false, '==', false);
   });
 
-  test("test operator precedence parsing", () {
-    testPrecedence("-a * b", "((-a) * b)");
-    testPrecedence("!-a", "(!(-a))");
-    testPrecedence("a + b + c", "((a + b) + c)");
-    testPrecedence("a + b - c", "((a + b) - c)");
-    testPrecedence("a * b * c", "((a * b) * c)");
-    testPrecedence("a * b / c", "((a * b) / c)");
-    testPrecedence("a + b / c", "(a + (b / c))");
-    testPrecedence("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)");
-    testPrecedence("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)");
-    testPrecedence("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))");
-    testPrecedence("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))");
+  test('test operator precedence parsing', () {
+    testPrecedence('-a * b', '((-a) * b)');
+    testPrecedence('!-a', '(!(-a))');
+    testPrecedence('a + b + c', '((a + b) + c)');
+    testPrecedence('a + b - c', '((a + b) - c)');
+    testPrecedence('a * b * c', '((a * b) * c)');
+    testPrecedence('a * b / c', '((a * b) / c)');
+    testPrecedence('a + b / c', '(a + (b / c))');
+    testPrecedence('a + b * c + d / e - f', '(((a + (b * c)) + (d / e)) - f)');
+    testPrecedence('3 + 4; -5 * 5', '(3 + 4)((-5) * 5)');
+    testPrecedence('5 > 4 == 3 < 4', '((5 > 4) == (3 < 4))');
+    testPrecedence('5 < 4 != 3 > 4', '((5 < 4) != (3 > 4))');
     testPrecedence(
-        "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
+        '3 + 4 * 5 == 3 * 1 + 4 * 5', '((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))');
     testPrecedence(
-        "3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))");
-    testPrecedence("true", "true");
-    testPrecedence("false", "false");
-    testPrecedence("3 > 5 == false", "((3 > 5) == false)");
-    testPrecedence("3 < 5 == true", "((3 < 5) == true)");
-    testPrecedence("1 + (2 + 3) + 4", "((1 + (2 + 3)) + 4)");
-    testPrecedence("(5 + 5) * 2", "((5 + 5) * 2)");
-    testPrecedence("2 / (5 + 5)", "(2 / (5 + 5))");
-    testPrecedence("(5 + 5) * 2 * (5 + 5)", "(((5 + 5) * 2) * (5 + 5))");
-    testPrecedence("-(5 + 5)", "(-(5 + 5))");
-    testPrecedence("!(true == true)", "(!(true == true))");
-//    testPrecedence("a + add(b * c) + d", "((a + add((b * c))) + d)");
-//    testPrecedence("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
-//        "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))");
-//    testPrecedence("add(a + b + c * d / f + g)",
-//        "add((((a + b) + ((c * d) / f)) + g))");
+        '3 + 4 * 5 == 3 * 1 + 4 * 5', '((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))');
+    testPrecedence('true', 'true');
+    testPrecedence('false', 'false');
+    testPrecedence('3 > 5 == false', '((3 > 5) == false)');
+    testPrecedence('3 < 5 == true', '((3 < 5) == true)');
+    testPrecedence('1 + (2 + 3) + 4', '((1 + (2 + 3)) + 4)');
+    testPrecedence('(5 + 5) * 2', '((5 + 5) * 2)');
+    testPrecedence('2 / (5 + 5)', '(2 / (5 + 5))');
+    testPrecedence('(5 + 5) * 2 * (5 + 5)', '(((5 + 5) * 2) * (5 + 5))');
+    testPrecedence('-(5 + 5)', '(-(5 + 5))');
+    testPrecedence('!(true == true)', '(!(true == true))');
+//    testPrecedence('a + add(b * c) + d', '((a + add((b * c))) + d)');
+//    testPrecedence('add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))',
+//        'add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))');
+//    testPrecedence('add(a + b + c * d / f + g)',
+//        'add((((a + b) + ((c * d) / f)) + g))');
   });
 
   test('test if expression', () {
@@ -105,10 +105,10 @@ void main() {
         parseExpressionStatement('if (x < y) { x }');
     expect(statement.expression, new isInstanceOf<IfExpression>());
     IfExpression expression = statement.expression;
-    testInfixExpression(expression.condition, "x", "<", "y");
+    testInfixExpression(expression.condition, 'x', '<', 'y');
     expect(expression.consequence.statements.length, equals(1));
     ExpressionStatement consequence = expression.consequence.statements.first;
-    testIdentifier(consequence.expression, "x");
+    testIdentifier(consequence.expression, 'x');
     expect(expression.alternative, isNull);
   });
 
@@ -117,15 +117,15 @@ void main() {
         parseExpressionStatement('if (x < y) { x } else { y }');
     expect(statement.expression, new isInstanceOf<IfExpression>());
     IfExpression expression = statement.expression;
-    testInfixExpression(expression.condition, "x", "<", "y");
+    testInfixExpression(expression.condition, 'x', '<', 'y');
 
     expect(expression.consequence.statements.length, equals(1));
     ExpressionStatement consequence = expression.consequence.statements.first;
-    testIdentifier(consequence.expression, "x");
+    testIdentifier(consequence.expression, 'x');
 
     expect(expression.alternative.statements.length, equals(1));
     ExpressionStatement alternative = expression.alternative.statements.first;
-    testIdentifier(alternative.expression, "y");
+    testIdentifier(alternative.expression, 'y');
   });
 
   test('test function literal parsing', () {
@@ -135,14 +135,14 @@ void main() {
     FunctionLiteral function = statement.expression;
 
     expect(function.parameters.length, equals(2));
-    testLiteralExpression(function.parameters[0], "x");
-    testLiteralExpression(function.parameters[1], "y");
+    testLiteralExpression(function.parameters[0], 'x');
+    testLiteralExpression(function.parameters[1], 'y');
 
     expect(function.body.statements.length, equals(1));
     expect(function.body.statements.first,
         new isInstanceOf<ExpressionStatement>());
     ExpressionStatement body = function.body.statements.first;
-    testInfixExpression(body.expression, "x", "+", "y");
+    testInfixExpression(body.expression, 'x', '+', 'y');
   });
 }
 
@@ -221,7 +221,7 @@ void testIntegerLiteral(Expression expression, int integerValue) {
   expect(expression, new isInstanceOf<IntegerLiteral>());
   IntegerLiteral literal = expression;
   expect(literal.value, equals(integerValue));
-  expect(literal.tokenLiteral(), equals("$integerValue"));
+  expect(literal.tokenLiteral(), equals('$integerValue'));
 }
 
 void testIdentifier(Expression expression, String value) {
@@ -239,7 +239,7 @@ void testLiteralExpression(Expression expression, Object expected) {
   } else if (expected is bool) {
     testBooleanLiteral(expression, expected);
   } else {
-    fail("type of expression not handled: ${expected.runtimeType}");
+    fail('type of expression not handled: ${expected.runtimeType}');
   }
 }
 
@@ -262,9 +262,8 @@ void testInfixExpression(
 
 void expectNumStatements(Program program, int expectedStatements) {
   expect(program.statements.length, equals(expectedStatements),
-      reason:
-          "program.statements does not contain $expectedStatements statements. got=${program
-          .statements.length}");
+      reason: 'program.statements does not contain $expectedStatements '
+          'statements. got=${program.statements.length}');
 }
 
 void checkParserErrors(Parser parser) {
@@ -272,9 +271,9 @@ void checkParserErrors(Parser parser) {
     return;
   }
 
-  print("parser has ${parser.errors.length} errors");
+  print('parser has ${parser.errors.length} errors');
   parser.errors.forEach((error) {
-    print("parser error: $error");
+    print('parser error: $error');
   });
 
   fail('');

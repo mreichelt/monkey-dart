@@ -6,7 +6,7 @@ import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:monkey_dart/token/token.dart';
 
 void start() {
-  const String prompt = ">> ";
+  const String prompt = '>> ';
   while (true) {
     stdout.write(prompt);
 
@@ -25,7 +25,7 @@ void start() {
 }
 
 void main() {
-  print("Hello! This is the Monkey programming language!");
-  print("Feel free to type in commands");
+  print('Hello! This is the Monkey programming language!');
+  print('Feel free to type in commands');
   start();
 }
