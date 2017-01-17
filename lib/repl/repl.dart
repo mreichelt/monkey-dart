@@ -2,17 +2,17 @@ library repl;
 
 import 'dart:io';
 
+import 'package:monkey_dart/ast/ast.dart';
 import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:monkey_dart/parser/parser.dart';
-import 'package:monkey_dart/ast/ast.dart';
 
 const MONKEY_FACE = r"""            __,__
    .--.  .-"     "-.  .--.
   / .. \/  .-. .-.  \/ .. \
  | |  '|  /   Y   \  |'  | |
  | \   \  \ 0 | 0 /  /   / |
-  \ '- ,\.-""" +
-    '"""""""' +
+  \ '- ,\.-"""
+    '"""""""'
     """-./, -' /
    ''-' /_   ^ ^   _\\ '-''
        |  \\._   _./  |
