@@ -5,7 +5,6 @@ import 'package:monkey_dart/lexer/lexer.dart';
 import 'package:monkey_dart/token/token.dart';
 
 enum Precedence {
-  _,
   LOWEST,
 
   /// ==
