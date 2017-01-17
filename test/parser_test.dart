@@ -144,6 +144,23 @@ void main() {
     ExpressionStatement body = function.body.statements.first;
     testInfixExpression(body.expression, 'x', '+', 'y');
   });
+
+  test('test function parameter parsing', () {
+    testFunctionParameters('fn() {};', []);
+    testFunctionParameters('fn(x) {};', ['x']);
+    testFunctionParameters('fn(x, y, z) {};', ['x', 'y', 'z']);
+  });
+}
+
+void testFunctionParameters(String input, List<String> expectedParameters) {
+  ExpressionStatement statement = parseExpressionStatement(input);
+  expect(statement.expression, new isInstanceOf<FunctionLiteral>());
+  FunctionLiteral function = statement.expression;
+
+  expect(function.parameters.length, equals(expectedParameters.length));
+  for (int i = 0; i < expectedParameters.length; i++) {
+    testIdentifier(function.parameters[i], expectedParameters[i]);
+  }
 }
 
 void testBooleanParsing(String input, bool expected) {
