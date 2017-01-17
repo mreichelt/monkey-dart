@@ -185,7 +185,7 @@ class Parser {
 
   void peekError(String tokenType) {
     errors.add('expected next token to be $tokenType, but got '
-        '${currentToken.type} instead');
+        '${peekToken.type} instead');
   }
 
   void noPrefixParseFnError(String tokenType) {
