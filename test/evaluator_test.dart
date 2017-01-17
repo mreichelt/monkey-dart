@@ -14,6 +14,15 @@ void main() {
     testEvalBoolean('true', true);
     testEvalBoolean('false', false);
   });
+
+  test('test bang operator', () {
+    testBangOperator('!true', false);
+    testBangOperator('!false', true);
+    testBangOperator('!5', false);
+    testBangOperator('!!true', true);
+    testBangOperator('!!false', false);
+    testBangOperator('!!5', true);
+  });
 }
 
 void testEvalInteger(String input, int expected) {
@@ -22,6 +31,11 @@ void testEvalInteger(String input, int expected) {
 }
 
 void testEvalBoolean(String input, bool expected) {
+  MonkeyObject evaluated = testEval(input);
+  testBooleanObject(evaluated, expected);
+}
+
+void testBangOperator(String input, bool expected) {
   MonkeyObject evaluated = testEval(input);
   testBooleanObject(evaluated, expected);
 }
