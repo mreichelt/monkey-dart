@@ -93,11 +93,11 @@ void main() {
     testPrecedence('(5 + 5) * 2 * (5 + 5)', '(((5 + 5) * 2) * (5 + 5))');
     testPrecedence('-(5 + 5)', '(-(5 + 5))');
     testPrecedence('!(true == true)', '(!(true == true))');
-//    testPrecedence('a + add(b * c) + d', '((a + add((b * c))) + d)');
-//    testPrecedence('add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))',
-//        'add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))');
-//    testPrecedence('add(a + b + c * d / f + g)',
-//        'add((((a + b) + ((c * d) / f)) + g))');
+    testPrecedence('a + add(b * c) + d', '((a + add((b * c))) + d)');
+    testPrecedence('add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))',
+        'add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))');
+    testPrecedence(
+        'add(a + b + c * d / f + g)', 'add((((a + b) + ((c * d) / f)) + g))');
   });
 
   test('test if expression', () {
@@ -149,6 +149,18 @@ void main() {
     testFunctionParameters('fn() {};', []);
     testFunctionParameters('fn(x) {};', ['x']);
     testFunctionParameters('fn(x, y, z) {};', ['x', 'y', 'z']);
+  });
+
+  test('test call expression parsing', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('add(1, 2 * 3, 4 + 5);');
+    expect(statement.expression, new isInstanceOf<CallExpression>());
+    CallExpression call = statement.expression;
+    testIdentifier(call.function, 'add');
+    expect(call.arguments, hasLength(3));
+    testLiteralExpression(call.arguments[0], 1);
+    testInfixExpression(call.arguments[1], 2, '*', 3);
+    testInfixExpression(call.arguments[2], 4, '+', 5);
   });
 }
 

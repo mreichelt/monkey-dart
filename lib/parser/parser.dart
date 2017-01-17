@@ -42,7 +42,8 @@ class Parser {
     Token.PLUS: Precedence.SUM,
     Token.MINUS: Precedence.SUM,
     Token.SLASH: Precedence.PRODUCT,
-    Token.ASTERISK: Precedence.PRODUCT
+    Token.ASTERISK: Precedence.PRODUCT,
+    Token.LPAREN: Precedence.CALL
   };
 
   Parser(this.lexer) {
@@ -68,6 +69,7 @@ class Parser {
     registerInfix(Token.NOT_EQ, parseInfixExpression);
     registerInfix(Token.LT, parseInfixExpression);
     registerInfix(Token.GT, parseInfixExpression);
+    registerInfix(Token.LPAREN, parseCallExpression);
   }
 
   void nextToken() {
@@ -328,5 +330,33 @@ class Parser {
     }
 
     return parameters;
+  }
+
+  CallExpression parseCallExpression(Expression function) {
+    CallExpression call = new CallExpression(currentToken, function);
+    call.arguments = parseCallArguments();
+    return call;
+  }
+
+  List<Expression> parseCallArguments() {
+    if (peekTokenIs(Token.RPAREN)) {
+      nextToken();
+      return [];
+    }
+    List<Expression> arguments = [];
+    nextToken();
+
+    arguments.add(parseExpression(Precedence.LOWEST));
+    while (peekTokenIs(Token.COMMA)) {
+      nextToken();
+      nextToken();
+      arguments.add(parseExpression(Precedence.LOWEST));
+    }
+
+    if (!expectPeek(Token.RPAREN)) {
+      return null;
+    }
+
+    return arguments;
   }
 }

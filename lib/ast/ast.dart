@@ -146,3 +146,13 @@ class FunctionLiteral extends Expression {
   @override
   String toString() => '${tokenLiteral()}(${parameters.join(', ')})$body';
 }
+
+class CallExpression extends Expression {
+  Expression function;
+  List<Expression> arguments = [];
+
+  CallExpression(Token token, this.function) : super(token);
+
+  @override
+  String toString() => '$function(${arguments.join(', ')})';
+}
