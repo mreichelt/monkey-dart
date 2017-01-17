@@ -18,8 +18,37 @@ MonkeyObject eval(Node node) {
     return nativeBoolToBooleanObject(node.value);
   } else if (node is PrefixExpression) {
     return evalPrefixExpression(node.operator, eval(node.right));
+  } else if (node is InfixExpression) {
+    var left = eval(node.left);
+    var right = eval(node.right);
+    return evalInfixExpression(node.operator, left, right);
   }
   return null;
+}
+
+MonkeyObject evalInfixExpression(
+    String operator, MonkeyObject left, MonkeyObject right) {
+  if (left.type == INTEGER_OBJ && right.type == INTEGER_OBJ) {
+    return evalIntegerInfixExpression(operator, left, right);
+  } else {
+    return NULL;
+  }
+}
+
+MonkeyObject evalIntegerInfixExpression(
+    String operator, Integer left, Integer right) {
+  switch (operator) {
+    case '+':
+      return new Integer(left.value + right.value);
+    case '-':
+      return new Integer(left.value - right.value);
+    case '*':
+      return new Integer(left.value * right.value);
+    case '/':
+      return new Integer(left.value ~/ right.value);
+    default:
+      return NULL;
+  }
 }
 
 MonkeyObject evalPrefixExpression(String operator, MonkeyObject right) {
