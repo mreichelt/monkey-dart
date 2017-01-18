@@ -7,6 +7,7 @@ class Token {
 // Identifiers + literals
       IDENT = 'IDENT', // add, foobar, x, y, ...
       INT = 'INT', // 1343456
+      STRING = 'STRING',
 
 // Operators
       ASSIGN = '=',

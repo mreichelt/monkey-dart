@@ -41,9 +41,11 @@ void main() {
     String input = """
       let five = 5;
       let ten = 10;
+
       let add = fn(x, y) {
         x + y;
       };
+
       let result = add(five, ten);
       !-/*5;
       5 < 10 > 5;
@@ -56,6 +58,8 @@ void main() {
 
       10 == 10;
       10 != 9;
+      "foobar"
+      "foo bar"
     """;
     List<Token> expected = [
       t(Token.LET, 'let'),
@@ -131,6 +135,8 @@ void main() {
       t(Token.NOT_EQ, '!='),
       t(Token.INT, '9'),
       t(Token.SEMICOLON, ';'),
+      t(Token.STRING, 'foobar'),
+      t(Token.STRING, 'foo bar'),
       t(Token.EOF, '')
     ];
 

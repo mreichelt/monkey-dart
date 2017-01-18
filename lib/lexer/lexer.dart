@@ -90,6 +90,9 @@ class Lexer {
         case '}':
           token = new Token(Token.RBRACE, ch);
           break;
+        case '"':
+          token = new Token(Token.STRING, readString());
+          break;
         default:
           if (isLetter(ch)) {
             String ident = readIdentifier();
@@ -165,6 +168,17 @@ class Lexer {
     int firstPosition = position;
     while (isDigit(ch)) {
       readChar();
+    }
+    return input.substring(firstPosition, position);
+  }
+
+  String readString() {
+    int firstPosition = position + 1;
+    while (true) {
+      readChar();
+      if (ch == '"') {
+        break;
+      }
     }
     return input.substring(firstPosition, position);
   }
