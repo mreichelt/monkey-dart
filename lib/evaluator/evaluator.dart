@@ -38,6 +38,8 @@ MonkeyObject evalProgram(Program program) {
     result = eval(program.statements[i]);
     if (result is ReturnValue) {
       return result.value;
+    } else if (result is MonkeyError) {
+      return result;
     }
   }
   return result;
@@ -47,8 +49,10 @@ MonkeyObject evalBlockStatement(BlockStatement block) {
   MonkeyObject result;
   for (int i = 0; i < block.statements.length; i++) {
     result = eval(block.statements[i]);
-    if (result != null && result.type == RETURN_VALUE_OBJ) {
-      return result;
+    if (result != null) {
+      if (result.type == RETURN_VALUE_OBJ || result.type == ERROR_OBJ) {
+        return result;
+      }
     }
   }
   return result;
@@ -85,8 +89,12 @@ MonkeyObject evalInfixExpression(
     return nativeBoolToBooleanObject(left == right);
   } else if (operator == '!=') {
     return nativeBoolToBooleanObject(left != right);
+  } else if (left.type != right.type) {
+    return new MonkeyError('type mismatch: ${left.type} '
+        '$operator ${right.type}');
   } else {
-    return NULL;
+    return new MonkeyError('unknown operator: ${left.type} '
+        '$operator ${right.type}');
   }
 }
 
@@ -110,7 +118,8 @@ MonkeyObject evalIntegerInfixExpression(
     case '!=':
       return nativeBoolToBooleanObject(left.value != right.value);
     default:
-      return NULL;
+      return new MonkeyError('unknown operator: ${left.type} '
+          '$operator ${right.type}');
   }
 }
 
@@ -121,7 +130,7 @@ MonkeyObject evalPrefixExpression(String operator, MonkeyObject right) {
     case '-':
       return evalMinusPrefixOperatorExpression(right);
     default:
-      return NULL;
+      return new MonkeyError('unknown operator: $operator${right.type}');
   }
 }
 
@@ -139,7 +148,7 @@ MonkeyObject evalBangOperatorExpression(MonkeyObject right) {
 
 MonkeyObject evalMinusPrefixOperatorExpression(MonkeyObject right) {
   if (right.type != INTEGER_OBJ) {
-    return NULL;
+    return new MonkeyError('unknown operator: -${right.type}');
   }
   return new Integer(-(right as Integer).value);
 }

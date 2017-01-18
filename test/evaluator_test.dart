@@ -80,6 +80,24 @@ void main() {
     ''',
         10);
   });
+
+  test('test error handling', () {
+    testErrorHandling('5 + true;', 'type mismatch: INTEGER + BOOLEAN');
+    testErrorHandling('5 + true; 5;', 'type mismatch: INTEGER + BOOLEAN');
+    testErrorHandling('-true', 'unknown operator: -BOOLEAN');
+    testErrorHandling('true + false;', 'unknown operator: BOOLEAN + BOOLEAN');
+    testErrorHandling(
+        'if (10 > 1) { true + false; }', 'unknown operator: BOOLEAN + BOOLEAN');
+    testErrorHandling(
+        '''if (10 > 1) {
+      if (10 > 1) {
+        return true + false;
+       }
+       return 1;
+      }
+    ''',
+        'unknown operator: BOOLEAN + BOOLEAN');
+  });
 }
 
 void testEvalInteger(String input, int expected) {
@@ -109,6 +127,13 @@ void testIfElse(String input, Object expected) {
 void testReturnStatement(String input, int expected) {
   MonkeyObject evaluated = testEval(input);
   testIntegerObject(evaluated, expected);
+}
+
+void testErrorHandling(String input, String expectedMessage) {
+  MonkeyObject evaluated = testEval(input);
+  expect(evaluated, new isInstanceOf<MonkeyError>());
+  MonkeyError error = evaluated;
+  expect(error.message, equals(expectedMessage));
 }
 
 void testNullObject(MonkeyObject object) {

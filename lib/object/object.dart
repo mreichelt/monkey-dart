@@ -3,7 +3,8 @@ library object;
 const String INTEGER_OBJ = 'INTEGER',
     BOOLEAN_OBJ = 'BOOLEAN',
     NULL_OBJ = 'NULL',
-    RETURN_VALUE_OBJ = 'RETURN_VALUE';
+    RETURN_VALUE_OBJ = 'RETURN_VALUE',
+    ERROR_OBJ = 'ERROR';
 
 abstract class MonkeyObject {
   final String type;
@@ -45,4 +46,13 @@ class ReturnValue extends MonkeyObject {
 
   @override
   String inspect() => value.inspect();
+}
+
+class MonkeyError extends MonkeyObject {
+  final String message;
+
+  MonkeyError(this.message) : super(ERROR_OBJ);
+
+  @override
+  String inspect() => 'ERROR: $message';
 }
