@@ -69,6 +69,16 @@ void main() {
     testReturnStatement('return 10; 9;', 10);
     testReturnStatement('return 2 * 5; 9;', 10);
     testReturnStatement('9; return 2 * 5; 9;', 10);
+    testReturnStatement(
+        '''
+      if (10 > 1) {
+        if (10 > 1) {
+          return 10;
+        }
+        return 1;
+      }
+    ''',
+        10);
   });
 }
 

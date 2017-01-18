@@ -9,7 +9,7 @@ const Boolean FALSE = const Boolean(false);
 
 MonkeyObject eval(Node node) {
   if (node is Program) {
-    return evalStatements(node.statements);
+    return evalProgram(node);
   } else if (node is ExpressionStatement) {
     return eval(node.expression);
   } else if (node is IntegerLiteral) {
@@ -23,13 +23,35 @@ MonkeyObject eval(Node node) {
     var right = eval(node.right);
     return evalInfixExpression(node.operator, left, right);
   } else if (node is BlockStatement) {
-    return evalStatements(node.statements);
+    return evalBlockStatement(node);
   } else if (node is IfExpression) {
     return evalIfExpression(node);
   } else if (node is ReturnStatement) {
     return new ReturnValue(eval(node.returnValue));
   }
   return null;
+}
+
+MonkeyObject evalProgram(Program program) {
+  MonkeyObject result;
+  for (int i = 0; i < program.statements.length; i++) {
+    result = eval(program.statements[i]);
+    if (result is ReturnValue) {
+      return result.value;
+    }
+  }
+  return result;
+}
+
+MonkeyObject evalBlockStatement(BlockStatement block) {
+  MonkeyObject result;
+  for (int i = 0; i < block.statements.length; i++) {
+    result = eval(block.statements[i]);
+    if (result != null && result.type == RETURN_VALUE_OBJ) {
+      return result;
+    }
+  }
+  return result;
 }
 
 MonkeyObject evalIfExpression(IfExpression expression) {
