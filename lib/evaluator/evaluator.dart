@@ -51,8 +51,31 @@ MonkeyObject eval(Node node, Environment env) {
         : value;
   } else if (node is FunctionLiteral) {
     return new MonkeyFunction(node.parameters, env, node.body);
+  } else if (node is CallExpression) {
+    MonkeyObject function = eval(node.function, env);
+    if (isError(function)) {
+      return function;
+    }
+    List<MonkeyObject> args = evalExpressions(node.arguments, env);
+    if (args.length == 1 && isError(args.first)) {
+      return args.first;
+    }
+    return applyFunction(function, args);
   }
   return null;
+}
+
+List<MonkeyObject> evalExpressions(
+    List<Expression> expressions, Environment env) {
+  List<MonkeyObject> result = [];
+  for (int i = 0; i < expressions.length; i++) {
+    MonkeyObject evaluated = eval(expressions[i], env);
+    if (isError(evaluated)) {
+      return [evaluated];
+    }
+    result.add(evaluated);
+  }
+  return result;
 }
 
 MonkeyObject evalProgram(Program program, Environment env) {
@@ -198,4 +221,27 @@ bool isError(MonkeyObject object) {
     return object.type == ERROR_OBJ;
   }
   return false;
+}
+
+MonkeyObject applyFunction(MonkeyObject function, List<MonkeyObject> args) {
+  if (function is MonkeyFunction) {
+    Environment extendedEnv = extendFunctionEnv(function, args);
+    MonkeyObject evaluated = eval(function.body, extendedEnv);
+    return unwrapReturnValue(evaluated);
+  } else {
+    return new MonkeyError('not a function: ${function.type}');
+  }
+}
+
+Environment extendFunctionEnv(
+    MonkeyFunction function, List<MonkeyObject> args) {
+  Environment env = new Environment.enclosedEnvironment(function.env);
+  for (int i = 0; i < function.parameters.length; i++) {
+    env.set(function.parameters[i].value, args[i]);
+  }
+  return env;
+}
+
+MonkeyObject unwrapReturnValue(MonkeyObject object) {
+  return object is ReturnValue ? object.value : object;
 }

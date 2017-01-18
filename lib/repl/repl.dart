@@ -25,7 +25,7 @@ const MONKEY_FACE = r"""            __,__
 
 void start() {
   const String prompt = '>> ';
-  final Environment env = new Environment();
+  final Environment env = new Environment.freshEnvironment();
   while (true) {
     stdout.write(prompt);
 
