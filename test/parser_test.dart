@@ -162,6 +162,13 @@ void main() {
     testInfixExpression(call.arguments[1], 2, '*', 3);
     testInfixExpression(call.arguments[2], 4, '+', 5);
   });
+
+  test('test string literal expression parsing', () {
+    ExpressionStatement statement = parseExpressionStatement('"hello world"');
+    expect(statement.expression, new isInstanceOf<StringLiteral>());
+    StringLiteral literal = statement.expression;
+    expect(literal.value, equals('hello world'));
+  });
 }
 
 void testFunctionParameters(String input, List<String> expectedParameters) {

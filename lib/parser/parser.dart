@@ -59,6 +59,7 @@ class Parser {
     registerPrefix(Token.LPAREN, parseGroupedExpression);
     registerPrefix(Token.IF, parseIfExpression);
     registerPrefix(Token.FUNCTION, parseFunctionLiteral);
+    registerPrefix(Token.STRING, parseStringLiteral);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -358,4 +359,7 @@ class Parser {
 
     return arguments;
   }
+
+  StringLiteral parseStringLiteral() =>
+      new StringLiteral(currentToken, currentToken.literal);
 }
