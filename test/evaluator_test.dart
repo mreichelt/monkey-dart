@@ -1,5 +1,6 @@
 import 'package:monkey_dart/evaluator/evaluator.dart';
 import 'package:monkey_dart/lexer/lexer.dart';
+import 'package:monkey_dart/object/environment.dart';
 import 'package:monkey_dart/object/object.dart';
 import 'package:monkey_dart/parser/parser.dart';
 import 'package:test/test.dart';
@@ -97,6 +98,14 @@ void main() {
       }
     ''',
         'unknown operator: BOOLEAN + BOOLEAN');
+    testErrorHandling('foobar', 'identifier not found: foobar');
+  });
+
+  test('test let statements', () {
+    testEvalInteger('let a = 5; a;', 5);
+    testEvalInteger('let a = 5 * 5; a;', 25);
+    testEvalInteger('let a = 5; let b = a; b;', 5);
+    testEvalInteger('let a = 5; let b = a; let c = a + b + 5; c;', 15);
   });
 }
 
@@ -154,5 +163,5 @@ void testBooleanObject(MonkeyObject object, bool expected) {
 
 MonkeyObject testEval(String input) {
   Parser parser = new Parser(new Lexer(input));
-  return eval(parser.parseProgram());
+  return eval(parser.parseProgram(), new Environment());
 }
