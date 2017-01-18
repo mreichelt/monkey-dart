@@ -63,6 +63,13 @@ void main() {
     testIfElse('if (1 > 2) { 10 } else { 20 }', 20);
     testIfElse('if (1 < 2) { 10 } else { 20 }', 10);
   });
+
+  test('test return statements', () {
+    testReturnStatement('return 10;', 10);
+    testReturnStatement('return 10; 9;', 10);
+    testReturnStatement('return 2 * 5; 9;', 10);
+    testReturnStatement('9; return 2 * 5; 9;', 10);
+  });
 }
 
 void testEvalInteger(String input, int expected) {
@@ -87,6 +94,11 @@ void testIfElse(String input, Object expected) {
   } else {
     testNullObject(evaluated);
   }
+}
+
+void testReturnStatement(String input, int expected) {
+  MonkeyObject evaluated = testEval(input);
+  testIntegerObject(evaluated, expected);
 }
 
 void testNullObject(MonkeyObject object) {

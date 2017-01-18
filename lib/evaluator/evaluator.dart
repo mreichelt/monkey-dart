@@ -26,6 +26,8 @@ MonkeyObject eval(Node node) {
     return evalStatements(node.statements);
   } else if (node is IfExpression) {
     return evalIfExpression(node);
+  } else if (node is ReturnStatement) {
+    return new ReturnValue(eval(node.returnValue));
   }
   return null;
 }
@@ -124,8 +126,11 @@ Boolean nativeBoolToBooleanObject(bool value) => value ? TRUE : FALSE;
 
 MonkeyObject evalStatements(List<Statement> statements) {
   MonkeyObject result;
-  statements.forEach((statement) {
-    result = eval(statement);
-  });
+  for (int i = 0; i < statements.length; i++) {
+    result = eval(statements[i]);
+    if (result is ReturnValue) {
+      return result.value;
+    }
+  }
   return result;
 }

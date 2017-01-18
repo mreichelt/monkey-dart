@@ -2,7 +2,8 @@ library object;
 
 const String INTEGER_OBJ = 'INTEGER',
     BOOLEAN_OBJ = 'BOOLEAN',
-    NULL_OBJ = 'NULL';
+    NULL_OBJ = 'NULL',
+    RETURN_VALUE_OBJ = 'RETURN_VALUE';
 
 abstract class MonkeyObject {
   final String type;
@@ -35,4 +36,13 @@ class MonkeyNull extends MonkeyObject {
 
   @override
   String inspect() => 'null';
+}
+
+class ReturnValue extends MonkeyObject {
+  final MonkeyObject value;
+
+  const ReturnValue(this.value) : super(RETURN_VALUE_OBJ);
+
+  @override
+  String inspect() => value.inspect();
 }
