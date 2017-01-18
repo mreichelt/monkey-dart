@@ -127,6 +127,18 @@ void main() {
         'let add = fn(x, y) { x + y; }; add(5 + 5, add(5, 5));', 20);
     testEvalInteger('fn(x) { x; }(5)', 5);
   });
+
+  test('test closures', () {
+    testEvalInteger(
+        '''
+    let newAdder = fn(x) {
+      fn(y) { x + y };
+    };
+    let addTwo = newAdder(2);
+    addTwo(2);
+   ''',
+        4);
+  });
 }
 
 void testEvalInteger(String input, int expected) {
