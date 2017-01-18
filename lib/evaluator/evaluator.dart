@@ -17,17 +17,26 @@ MonkeyObject eval(Node node) {
   } else if (node is BooleanLiteral) {
     return nativeBoolToBooleanObject(node.value);
   } else if (node is PrefixExpression) {
-    return evalPrefixExpression(node.operator, eval(node.right));
+    var right = eval(node.right);
+    return isError(right) ? right : evalPrefixExpression(node.operator, right);
   } else if (node is InfixExpression) {
     var left = eval(node.left);
+    if (isError(left)) {
+      return left;
+    }
+
     var right = eval(node.right);
+    if (isError(right)) {
+      return right;
+    }
     return evalInfixExpression(node.operator, left, right);
   } else if (node is BlockStatement) {
     return evalBlockStatement(node);
   } else if (node is IfExpression) {
     return evalIfExpression(node);
   } else if (node is ReturnStatement) {
-    return new ReturnValue(eval(node.returnValue));
+    var value = eval(node.returnValue);
+    return isError(value) ? value : new ReturnValue(value);
   }
   return null;
 }
@@ -60,6 +69,10 @@ MonkeyObject evalBlockStatement(BlockStatement block) {
 
 MonkeyObject evalIfExpression(IfExpression expression) {
   MonkeyObject condition = eval(expression.condition);
+  if (isError(condition)) {
+    return condition;
+  }
+
   if (isTruthy(condition)) {
     return eval(expression.consequence);
   } else if (expression.alternative != null) {
@@ -164,4 +177,11 @@ MonkeyObject evalStatements(List<Statement> statements) {
     }
   }
   return result;
+}
+
+bool isError(MonkeyObject object) {
+  if (object != null) {
+    return object.type == ERROR_OBJ;
+  }
+  return false;
 }
