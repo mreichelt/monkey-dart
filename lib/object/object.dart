@@ -1,10 +1,14 @@
 library object;
 
+import 'package:monkey_dart/ast/ast.dart';
+import 'package:monkey_dart/object/environment.dart';
+
 const String INTEGER_OBJ = 'INTEGER',
     BOOLEAN_OBJ = 'BOOLEAN',
     NULL_OBJ = 'NULL',
     RETURN_VALUE_OBJ = 'RETURN_VALUE',
-    ERROR_OBJ = 'ERROR';
+    ERROR_OBJ = 'ERROR',
+    FUNCTION_OBJ = 'FUNCTION';
 
 abstract class MonkeyObject {
   final String type;
@@ -51,8 +55,19 @@ class ReturnValue extends MonkeyObject {
 class MonkeyError extends MonkeyObject {
   final String message;
 
-  MonkeyError(this.message) : super(ERROR_OBJ);
+  const MonkeyError(this.message) : super(ERROR_OBJ);
 
   @override
   String inspect() => 'ERROR: $message';
+}
+
+class MonkeyFunction extends MonkeyObject {
+  List<Identifier> parameters;
+  Environment env;
+  BlockStatement body;
+
+  MonkeyFunction(this.parameters, this.env, this.body) : super(FUNCTION_OBJ);
+
+  @override
+  String inspect() => 'fn(${parameters.join(', ')}) {\n$body\n}';
 }

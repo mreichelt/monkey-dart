@@ -107,6 +107,16 @@ void main() {
     testEvalInteger('let a = 5; let b = a; b;', 5);
     testEvalInteger('let a = 5; let b = a; let c = a + b + 5; c;', 15);
   });
+
+  test('test function object', () {
+    MonkeyObject evaluated = testEval('fn(x) { x + 2; };');
+    expect(evaluated, new isInstanceOf<MonkeyFunction>());
+    MonkeyFunction function = evaluated;
+
+    expect(function.parameters.length, equals(1));
+    expect(function.parameters.first.toString(), equals('x'));
+    expect(function.body.toString(), equals('(x + 2)'));
+  });
 }
 
 void testEvalInteger(String input, int expected) {

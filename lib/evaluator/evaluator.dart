@@ -49,6 +49,8 @@ MonkeyObject eval(Node node, Environment env) {
     return value == null
         ? new MonkeyError('identifier not found: ${node.value}')
         : value;
+  } else if (node is FunctionLiteral) {
+    return new MonkeyFunction(node.parameters, env, node.body);
   }
   return null;
 }
