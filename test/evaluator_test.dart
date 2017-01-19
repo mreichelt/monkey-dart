@@ -154,6 +154,27 @@ void main() {
     MonkeyString string = evaluated;
     expect(string.value, equals('Hello World!'));
   });
+
+  test('test builtin functions', () {
+    testBuiltin('len("")', 0);
+    testBuiltin('len("four")', 4);
+    testBuiltin('len("hello world")', 11);
+    testBuiltin('len(1)', 'argument to `len` not supported, got INTEGER');
+    testBuiltin(
+        'len("one", "two")', "wrong number of arguments. got=2, want=1");
+  });
+}
+
+void testBuiltin(String input, Object expected) {
+  MonkeyObject evaluated = testEval(input);
+  if (expected is int) {
+    testIntegerObject(evaluated, expected);
+  } else if (expected is String) {
+    expect(evaluated, new isInstanceOf<MonkeyError>());
+    expect((evaluated as MonkeyError).message, equals(expected));
+  } else {
+    fail('unsupported test type: ${expected.runtimeType}');
+  }
 }
 
 void testEvalInteger(String input, int expected) {

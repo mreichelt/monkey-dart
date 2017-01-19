@@ -1,6 +1,7 @@
 library evaluator;
 
 import 'package:monkey_dart/ast/ast.dart';
+import 'package:monkey_dart/evaluator/builtins.dart';
 import 'package:monkey_dart/object/environment.dart';
 import 'package:monkey_dart/object/object.dart';
 
@@ -45,10 +46,7 @@ MonkeyObject eval(Node node, Environment env) {
     }
     env.set(node.name.value, value);
   } else if (node is Identifier) {
-    var value = env.get(node.value);
-    return value == null
-        ? new MonkeyError('identifier not found: ${node.value}')
-        : value;
+    return evalIdentifier(node, env);
   } else if (node is FunctionLiteral) {
     return new MonkeyFunction(node.parameters, env, node.body);
   } else if (node is CallExpression) {
@@ -65,6 +63,20 @@ MonkeyObject eval(Node node, Environment env) {
     return new MonkeyString(node.value);
   }
   return null;
+}
+
+MonkeyObject evalIdentifier(Identifier node, Environment env) {
+  MonkeyObject value = env.get(node.value);
+  if (value != null) {
+    return value;
+  }
+
+  Builtin builtin = builtins[node.value];
+  if (builtin != null) {
+    return builtin;
+  }
+
+  return new MonkeyError('identifier not found: ${node.value}');
 }
 
 List<MonkeyObject> evalExpressions(
@@ -243,6 +255,8 @@ MonkeyObject applyFunction(MonkeyObject function, List<MonkeyObject> args) {
     Environment extendedEnv = extendFunctionEnv(function, args);
     MonkeyObject evaluated = eval(function.body, extendedEnv);
     return unwrapReturnValue(evaluated);
+  } else if (function is Builtin) {
+    return function.fn(args);
   } else {
     return new MonkeyError('not a function: ${function.type}');
   }

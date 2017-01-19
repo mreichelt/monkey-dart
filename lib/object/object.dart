@@ -9,7 +9,8 @@ const String INTEGER_OBJ = 'INTEGER',
     RETURN_VALUE_OBJ = 'RETURN_VALUE',
     ERROR_OBJ = 'ERROR',
     FUNCTION_OBJ = 'FUNCTION',
-    STRING_OBJ = 'STRING';
+    STRING_OBJ = 'STRING',
+    BUILTIN_OBJ = 'BUILTIN';
 
 abstract class MonkeyObject {
   final String type;
@@ -80,4 +81,13 @@ class MonkeyString extends MonkeyObject {
 
   @override
   String inspect() => value;
+}
+
+class Builtin extends MonkeyObject {
+  final Function fn;
+
+  const Builtin(this.fn) : super(BUILTIN_OBJ);
+
+  @override
+  String inspect() => 'builtin function';
 }
