@@ -61,6 +61,8 @@ MonkeyObject eval(Node node, Environment env) {
       return args.first;
     }
     return applyFunction(function, args);
+  } else if (node is StringLiteral) {
+    return new MonkeyString(node.value);
   }
   return null;
 }

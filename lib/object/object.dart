@@ -8,7 +8,8 @@ const String INTEGER_OBJ = 'INTEGER',
     NULL_OBJ = 'NULL',
     RETURN_VALUE_OBJ = 'RETURN_VALUE',
     ERROR_OBJ = 'ERROR',
-    FUNCTION_OBJ = 'FUNCTION';
+    FUNCTION_OBJ = 'FUNCTION',
+    STRING_OBJ = 'STRING';
 
 abstract class MonkeyObject {
   final String type;
@@ -70,4 +71,13 @@ class MonkeyFunction extends MonkeyObject {
 
   @override
   String inspect() => 'fn(${parameters.join(', ')}) {\n$body\n}';
+}
+
+class MonkeyString extends MonkeyObject {
+  String value;
+
+  MonkeyString(this.value) : super(STRING_OBJ);
+
+  @override
+  String inspect() => value;
 }

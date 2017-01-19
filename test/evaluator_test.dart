@@ -139,6 +139,13 @@ void main() {
    ''',
         4);
   });
+
+  test('test string literal', () {
+    MonkeyObject evaluated = testEval('"Hello World!"');
+    expect(evaluated, new isInstanceOf<MonkeyString>());
+    MonkeyString string = evaluated;
+    expect(string.value, equals('Hello World!'));
+  });
 }
 
 void testEvalInteger(String input, int expected) {
