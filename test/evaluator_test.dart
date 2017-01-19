@@ -99,6 +99,7 @@ void main() {
     ''',
         'unknown operator: BOOLEAN + BOOLEAN');
     testErrorHandling('foobar', 'identifier not found: foobar');
+    testErrorHandling('"Hello" - "World"', 'unknown operator: STRING - STRING');
   });
 
   test('test let statements', () {
@@ -142,6 +143,13 @@ void main() {
 
   test('test string literal', () {
     MonkeyObject evaluated = testEval('"Hello World!"');
+    expect(evaluated, new isInstanceOf<MonkeyString>());
+    MonkeyString string = evaluated;
+    expect(string.value, equals('Hello World!'));
+  });
+
+  test('test string concatenation', () {
+    MonkeyObject evaluated = testEval('"Hello" + " " + "World!"');
     expect(evaluated, new isInstanceOf<MonkeyString>());
     MonkeyString string = evaluated;
     expect(string.value, equals('Hello World!'));

@@ -137,6 +137,8 @@ MonkeyObject evalInfixExpression(
     String operator, MonkeyObject left, MonkeyObject right) {
   if (left.type == INTEGER_OBJ && right.type == INTEGER_OBJ) {
     return evalIntegerInfixExpression(operator, left, right);
+  } else if (left.type == STRING_OBJ && right.type == STRING_OBJ) {
+    return evalStringInfixExpression(operator, left, right);
   } else if (operator == '==') {
     return nativeBoolToBooleanObject(left == right);
   } else if (operator == '!=') {
@@ -169,6 +171,17 @@ MonkeyObject evalIntegerInfixExpression(
       return nativeBoolToBooleanObject(left.value == right.value);
     case '!=':
       return nativeBoolToBooleanObject(left.value != right.value);
+    default:
+      return new MonkeyError('unknown operator: ${left.type} '
+          '$operator ${right.type}');
+  }
+}
+
+MonkeyObject evalStringInfixExpression(
+    String operator, MonkeyString left, MonkeyString right) {
+  switch (operator) {
+    case '+':
+      return new MonkeyString(left.value + right.value);
     default:
       return new MonkeyError('unknown operator: ${left.type} '
           '$operator ${right.type}');
