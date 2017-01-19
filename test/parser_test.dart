@@ -169,6 +169,17 @@ void main() {
     StringLiteral literal = statement.expression;
     expect(literal.value, equals('hello world'));
   });
+
+  test('test array literals parsing', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('[1, 2 * 2, 3 + 3]');
+    expect(statement.expression, new isInstanceOf<ArrayLiteral>());
+    ArrayLiteral array = statement.expression;
+    expect(array.elements.length, equals(3));
+    testIntegerLiteral(array.elements[0], 1);
+    testInfixExpression(array.elements[1], 2, '*', 2);
+    testInfixExpression(array.elements[2], 3, '+', 3);
+  });
 }
 
 void testFunctionParameters(String input, List<String> expectedParameters) {

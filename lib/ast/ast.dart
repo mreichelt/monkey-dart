@@ -165,3 +165,12 @@ class StringLiteral extends Expression {
   @override
   String toString() => token.literal;
 }
+
+class ArrayLiteral extends Expression {
+  List<Expression> elements;
+
+  ArrayLiteral(Token token, this.elements) : super(token);
+
+  @override
+  String toString() => '[${elements.join(', ')}]';
+}

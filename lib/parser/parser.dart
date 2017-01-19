@@ -60,6 +60,7 @@ class Parser {
     registerPrefix(Token.IF, parseIfExpression);
     registerPrefix(Token.FUNCTION, parseFunctionLiteral);
     registerPrefix(Token.STRING, parseStringLiteral);
+    registerPrefix(Token.LBRACKET, parseArrayLiteral);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -334,32 +335,37 @@ class Parser {
 
   CallExpression parseCallExpression(Expression function) {
     CallExpression call = new CallExpression(currentToken, function);
-    call.arguments = parseCallArguments();
+    call.arguments = parseExpressionList(Token.RPAREN);
     return call;
-  }
-
-  List<Expression> parseCallArguments() {
-    if (peekTokenIs(Token.RPAREN)) {
-      nextToken();
-      return [];
-    }
-    List<Expression> arguments = [];
-    nextToken();
-
-    arguments.add(parseExpression(Precedence.LOWEST));
-    while (peekTokenIs(Token.COMMA)) {
-      nextToken();
-      nextToken();
-      arguments.add(parseExpression(Precedence.LOWEST));
-    }
-
-    if (!expectPeek(Token.RPAREN)) {
-      return null;
-    }
-
-    return arguments;
   }
 
   StringLiteral parseStringLiteral() =>
       new StringLiteral(currentToken, currentToken.literal);
+
+  ArrayLiteral parseArrayLiteral() =>
+      new ArrayLiteral(currentToken, parseExpressionList(Token.RBRACKET));
+
+  List<Expression> parseExpressionList(String endTokenType) {
+    List<Expression> list = [];
+
+    if (peekTokenIs(endTokenType)) {
+      nextToken();
+      return list;
+    }
+
+    nextToken();
+    list.add(parseExpression(Precedence.LOWEST));
+
+    while (peekTokenIs(Token.COMMA)) {
+      nextToken();
+      nextToken();
+      list.add(parseExpression(Precedence.LOWEST));
+    }
+
+    if (!expectPeek(endTokenType)) {
+      return null;
+    }
+
+    return list;
+  }
 }
