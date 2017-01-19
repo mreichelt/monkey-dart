@@ -28,6 +28,8 @@ class Token {
       RPAREN = ')',
       LBRACE = '{',
       RBRACE = '}',
+      LBRACKET = '[',
+      RBRACKET = ']',
 
 // Keywords
       FUNCTION = 'FUNCTION',

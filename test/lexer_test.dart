@@ -60,6 +60,7 @@ void main() {
       10 != 9;
       "foobar"
       "foo bar"
+      [1, 2];
     """;
     List<Token> expected = [
       t(Token.LET, 'let'),
@@ -137,6 +138,12 @@ void main() {
       t(Token.SEMICOLON, ';'),
       t(Token.STRING, 'foobar'),
       t(Token.STRING, 'foo bar'),
+      t(Token.LBRACKET, '['),
+      t(Token.INT, '1'),
+      t(Token.COMMA, ','),
+      t(Token.INT, '2'),
+      t(Token.RBRACKET, ']'),
+      t(Token.SEMICOLON, ';'),
       t(Token.EOF, '')
     ];
 
