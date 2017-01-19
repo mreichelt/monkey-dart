@@ -174,3 +174,13 @@ class ArrayLiteral extends Expression {
   @override
   String toString() => '[${elements.join(', ')}]';
 }
+
+class IndexExpression extends Expression {
+  Expression left;
+  Expression index;
+
+  IndexExpression(Token token) : super(token);
+
+  @override
+  String toString() => '($left[$index])';
+}

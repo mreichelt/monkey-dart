@@ -23,7 +23,10 @@ enum Precedence {
   PREFIX,
 
   /// myFunction(x)
-  CALL
+  CALL,
+
+  /// array[index]
+  INDEX
 }
 
 class Parser {
@@ -42,7 +45,8 @@ class Parser {
     Token.MINUS: Precedence.SUM,
     Token.SLASH: Precedence.PRODUCT,
     Token.ASTERISK: Precedence.PRODUCT,
-    Token.LPAREN: Precedence.CALL
+    Token.LPAREN: Precedence.CALL,
+    Token.LBRACKET: Precedence.INDEX
   };
 
   Parser(this.lexer) {
@@ -71,6 +75,7 @@ class Parser {
     registerInfix(Token.LT, parseInfixExpression);
     registerInfix(Token.GT, parseInfixExpression);
     registerInfix(Token.LPAREN, parseCallExpression);
+    registerInfix(Token.LBRACKET, parseIndexExpression);
   }
 
   void nextToken() {
@@ -367,5 +372,15 @@ class Parser {
     }
 
     return list;
+  }
+
+  IndexExpression parseIndexExpression(Expression left) {
+    IndexExpression expression = new IndexExpression(currentToken)..left = left;
+    nextToken();
+    expression.index = parseExpression(Precedence.LOWEST);
+    if (!expectPeek(Token.RBRACKET)) {
+      return null;
+    }
+    return expression;
   }
 }

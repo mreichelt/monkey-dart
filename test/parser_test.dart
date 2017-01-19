@@ -98,6 +98,10 @@ void main() {
         'add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))');
     testPrecedence(
         'add(a + b + c * d / f + g)', 'add((((a + b) + ((c * d) / f)) + g))');
+    testPrecedence(
+        'a * [1, 2, 3, 4][b * c] * d', '((a * ([1, 2, 3, 4][(b * c)])) * d)');
+    testPrecedence('add(a * b[2], b[1], 2 * [1, 2][1])',
+        'add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))');
   });
 
   test('test if expression', () {
@@ -179,6 +183,14 @@ void main() {
     testIntegerLiteral(array.elements[0], 1);
     testInfixExpression(array.elements[1], 2, '*', 2);
     testInfixExpression(array.elements[2], 3, '+', 3);
+  });
+
+  test('test parsing index expressions', () {
+    ExpressionStatement statement = parseExpressionStatement('myArray[1 + 1]');
+    expect(statement.expression, new isInstanceOf<IndexExpression>());
+    IndexExpression indexExpression = statement.expression;
+    testIdentifier(indexExpression.left, 'myArray');
+    testInfixExpression(indexExpression.index, 1, '+', 1);
   });
 }
 
