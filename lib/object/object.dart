@@ -10,7 +10,8 @@ const String INTEGER_OBJ = 'INTEGER',
     ERROR_OBJ = 'ERROR',
     FUNCTION_OBJ = 'FUNCTION',
     STRING_OBJ = 'STRING',
-    BUILTIN_OBJ = 'BUILTIN';
+    BUILTIN_OBJ = 'BUILTIN',
+    ARRAY_OBJ = 'ARRAY';
 
 abstract class MonkeyObject {
   final String type;
@@ -90,4 +91,14 @@ class Builtin extends MonkeyObject {
 
   @override
   String inspect() => 'builtin function';
+}
+
+class MonkeyArray extends MonkeyObject {
+  final List<MonkeyObject> elements;
+
+  const MonkeyArray(this.elements) : super(ARRAY_OBJ);
+
+  @override
+  String inspect() =>
+      '[${elements.map((object) => object.inspect()).join(', ')}]';
 }

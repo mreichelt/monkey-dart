@@ -163,6 +163,16 @@ void main() {
     testBuiltin(
         'len("one", "two")', "wrong number of arguments. got=2, want=1");
   });
+
+  test('test array literals', () {
+    MonkeyObject evaluated = testEval('[1, 2 * 2, 3 + 3]');
+    expect(evaluated, new isInstanceOf<MonkeyArray>());
+    MonkeyArray array = evaluated;
+    expect(array.elements.length, equals(3));
+    testIntegerObject(array.elements[0], 1);
+    testIntegerObject(array.elements[1], 4);
+    testIntegerObject(array.elements[2], 6);
+  });
 }
 
 void testBuiltin(String input, Object expected) {

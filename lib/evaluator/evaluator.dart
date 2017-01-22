@@ -61,6 +61,12 @@ MonkeyObject eval(Node node, Environment env) {
     return applyFunction(function, args);
   } else if (node is StringLiteral) {
     return new MonkeyString(node.value);
+  } else if (node is ArrayLiteral) {
+    List<MonkeyObject> elements = evalExpressions(node.elements, env);
+    if (elements.length == 1 && elements.first is MonkeyError) {
+      return elements.first;
+    }
+    return new MonkeyArray(elements);
   }
   return null;
 }
