@@ -162,6 +162,8 @@ void main() {
     testBuiltin('len(1)', 'argument to `len` not supported, got INTEGER');
     testBuiltin(
         'len("one", "two")', "wrong number of arguments. got=2, want=1");
+    testBuiltin('len([1, 2, 3])', 3);
+    testBuiltin('len([])', 0);
   });
 
   test('test array literals', () {

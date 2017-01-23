@@ -12,6 +12,8 @@ final Map<String, Builtin> builtins = {
     MonkeyObject arg = args.first;
     if (arg is MonkeyString) {
       return new Integer(arg.value.length);
+    } else if (arg is MonkeyArray) {
+      return new Integer(arg.elements.length);
     }
 
     return new MonkeyError('argument to `len` not supported, got ${arg.type}');
