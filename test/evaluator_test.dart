@@ -164,6 +164,17 @@ void main() {
         'len("one", "two")', "wrong number of arguments. got=2, want=1");
     testBuiltin('len([1, 2, 3])', 3);
     testBuiltin('len([])', 0);
+    //testBuiltin('puts("hello", "world!")', null);
+    testBuiltin('first([1, 2, 3])', 1);
+    testBuiltin('first([])', null);
+    testBuiltin('first(1)', 'argument to `first` must be ARRAY, got INTEGER');
+    testBuiltin('last([1, 2, 3])', 3);
+    testBuiltin('last([])', null);
+    testBuiltin('last(1)', 'argument to `last` must be ARRAY, got INTEGER');
+    testBuiltin('rest([1, 2, 3])', [2, 3]);
+    testBuiltin('rest([])', null);
+    testBuiltin('push([], 1)', [1]);
+    testBuiltin('push(1, 1)', 'argument to `push` must be ARRAY, got INTEGER');
   });
 
   test('test array literals', () {
@@ -199,6 +210,15 @@ void testBuiltin(String input, Object expected) {
   } else if (expected is String) {
     expect(evaluated, new isInstanceOf<MonkeyError>());
     expect((evaluated as MonkeyError).message, equals(expected));
+  } else if (expected == null) {
+    testNullObject(evaluated);
+  } else if (expected is List<int>) {
+    expect(evaluated, new isInstanceOf<MonkeyArray>());
+    MonkeyArray array = evaluated;
+    expect(array.elements.length, equals(expected.length));
+    for (int i = 0; i < expected.length; i++) {
+      testIntegerObject(array.elements[i], expected[i]);
+    }
   } else {
     fail('unsupported test type: ${expected.runtimeType}');
   }
