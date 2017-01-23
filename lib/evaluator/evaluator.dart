@@ -67,8 +67,33 @@ MonkeyObject eval(Node node, Environment env) {
       return elements.first;
     }
     return new MonkeyArray(elements);
+  } else if (node is IndexExpression) {
+    MonkeyObject left = eval(node.left, env);
+    if (isError(left)) {
+      return left;
+    }
+    MonkeyObject index = eval(node.index, env);
+    if (isError(index)) {
+      return index;
+    }
+    return evalIndexExpression(left, index);
   }
   return null;
+}
+
+MonkeyObject evalIndexExpression(MonkeyObject left, MonkeyObject index) {
+  if (left.type == ARRAY_OBJ && index.type == INTEGER_OBJ) {
+    return evalArrayIndexExpression(left, index);
+  } else {
+    return new MonkeyError('index operator not supported: ${left.type}');
+  }
+}
+
+MonkeyObject evalArrayIndexExpression(MonkeyArray array, Integer index) {
+  int idx = index.value;
+  int max = array.elements.length - 1;
+  bool outOfRange = idx < 0 || idx > max;
+  return outOfRange ? NULL : array.elements[idx];
 }
 
 MonkeyObject evalIdentifier(Identifier node, Environment env) {

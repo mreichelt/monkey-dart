@@ -173,6 +173,21 @@ void main() {
     testIntegerObject(array.elements[1], 4);
     testIntegerObject(array.elements[2], 6);
   });
+
+  test('test array index expressions', () {
+    testArrayIndex('[1, 2, 3][0]', 1);
+    testArrayIndex('[1, 2, 3][1]', 2);
+    testArrayIndex('[1, 2, 3][2]', 3);
+    testArrayIndex('let i = 0; [1][i];', 1);
+    testArrayIndex('[1, 2, 3][1 + 1];', 3);
+    testArrayIndex('let myArray = [1, 2, 3]; myArray[2];', 3);
+    testArrayIndex(
+        'let myArray = [1, 2, 3]; myArray[0] + myArray[1] + myArray[2];', 6);
+    testArrayIndex(
+        'let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]', 2);
+    testArrayIndex('[1, 2, 3][3]', null);
+    testArrayIndex('[1, 2, 3][-1]', null);
+  });
 }
 
 void testBuiltin(String input, Object expected) {
@@ -221,6 +236,15 @@ void testErrorHandling(String input, String expectedMessage) {
   expect(evaluated, new isInstanceOf<MonkeyError>());
   MonkeyError error = evaluated;
   expect(error.message, equals(expectedMessage));
+}
+
+void testArrayIndex(String input, Object expected) {
+  MonkeyObject evaluated = testEval(input);
+  if (expected is int) {
+    testIntegerObject(evaluated, expected);
+  } else {
+    testNullObject(evaluated);
+  }
 }
 
 void testNullObject(MonkeyObject object) {
