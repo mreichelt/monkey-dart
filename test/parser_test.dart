@@ -110,7 +110,7 @@ void main() {
     expect(statement.expression, new isInstanceOf<IfExpression>());
     IfExpression expression = statement.expression;
     testInfixExpression(expression.condition, 'x', '<', 'y');
-    expect(expression.consequence.statements.length, equals(1));
+    expect(expression.consequence.statements, hasLength(1));
     ExpressionStatement consequence = expression.consequence.statements.first;
     testIdentifier(consequence.expression, 'x');
     expect(expression.alternative, isNull);
@@ -123,11 +123,11 @@ void main() {
     IfExpression expression = statement.expression;
     testInfixExpression(expression.condition, 'x', '<', 'y');
 
-    expect(expression.consequence.statements.length, equals(1));
+    expect(expression.consequence.statements, hasLength(1));
     ExpressionStatement consequence = expression.consequence.statements.first;
     testIdentifier(consequence.expression, 'x');
 
-    expect(expression.alternative.statements.length, equals(1));
+    expect(expression.alternative.statements, hasLength(1));
     ExpressionStatement alternative = expression.alternative.statements.first;
     testIdentifier(alternative.expression, 'y');
   });
@@ -138,11 +138,11 @@ void main() {
     expect(statement.expression, new isInstanceOf<FunctionLiteral>());
     FunctionLiteral function = statement.expression;
 
-    expect(function.parameters.length, equals(2));
+    expect(function.parameters, hasLength(2));
     testLiteralExpression(function.parameters[0], 'x');
     testLiteralExpression(function.parameters[1], 'y');
 
-    expect(function.body.statements.length, equals(1));
+    expect(function.body.statements, hasLength(1));
     expect(function.body.statements.first,
         new isInstanceOf<ExpressionStatement>());
     ExpressionStatement body = function.body.statements.first;
@@ -179,7 +179,7 @@ void main() {
         parseExpressionStatement('[1, 2 * 2, 3 + 3]');
     expect(statement.expression, new isInstanceOf<ArrayLiteral>());
     ArrayLiteral array = statement.expression;
-    expect(array.elements.length, equals(3));
+    expect(array.elements, hasLength(3));
     testIntegerLiteral(array.elements[0], 1);
     testInfixExpression(array.elements[1], 2, '*', 2);
     testInfixExpression(array.elements[2], 3, '+', 3);
@@ -248,7 +248,7 @@ void testFunctionParameters(String input, List<String> expectedParameters) {
   expect(statement.expression, new isInstanceOf<FunctionLiteral>());
   FunctionLiteral function = statement.expression;
 
-  expect(function.parameters.length, equals(expectedParameters.length));
+  expect(function.parameters, hasLength(expectedParameters.length));
   for (int i = 0; i < expectedParameters.length; i++) {
     testIdentifier(function.parameters[i], expectedParameters[i]);
   }
@@ -369,9 +369,7 @@ void testInfixExpression(
 }
 
 void expectNumStatements(Program program, int expectedStatements) {
-  expect(program.statements.length, equals(expectedStatements),
-      reason: 'program.statements does not contain $expectedStatements '
-          'statements. got=${program.statements.length}');
+  expect(program.statements, hasLength(expectedStatements));
 }
 
 void checkParserErrors(Parser parser) {

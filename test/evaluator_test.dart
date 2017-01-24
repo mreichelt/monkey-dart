@@ -116,7 +116,7 @@ void main() {
     expect(evaluated, new isInstanceOf<MonkeyFunction>());
     MonkeyFunction function = evaluated;
 
-    expect(function.parameters.length, equals(1));
+    expect(function.parameters, hasLength(1));
     expect(function.parameters.first.toString(), equals('x'));
     expect(function.body.toString(), equals('(x + 2)'));
   });
@@ -183,7 +183,7 @@ void main() {
     MonkeyObject evaluated = testEval('[1, 2 * 2, 3 + 3]');
     expect(evaluated, new isInstanceOf<MonkeyArray>());
     MonkeyArray array = evaluated;
-    expect(array.elements.length, equals(3));
+    expect(array.elements, hasLength(3));
     testIntegerObject(array.elements[0], 1);
     testIntegerObject(array.elements[1], 4);
     testIntegerObject(array.elements[2], 6);
@@ -257,7 +257,7 @@ void testBuiltin(String input, Object expected) {
   } else if (expected is List<int>) {
     expect(evaluated, new isInstanceOf<MonkeyArray>());
     MonkeyArray array = evaluated;
-    expect(array.elements.length, equals(expected.length));
+    expect(array.elements, hasLength(expected.length));
     for (int i = 0; i < expected.length; i++) {
       testIntegerObject(array.elements[i], expected[i]);
     }
