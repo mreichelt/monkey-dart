@@ -201,6 +201,36 @@ void main() {
     testArrayIndex('[1, 2, 3][3]', null);
     testArrayIndex('[1, 2, 3][-1]', null);
   });
+
+  test('test hash literals', () {
+    MonkeyObject evaluated = testEval("""
+      let two = "two";
+      {
+        "one": 10 - 9,
+        two: 1 + 1,
+        "thr" + "ee": 6 / 2,
+        4: 4,
+        true: 5,
+        false: 6
+      }
+    """);
+    expect(evaluated, new isInstanceOf<Hash>());
+    Hash hash = evaluated;
+    Map<HashKey, int> expected = {
+      new MonkeyString('one').hashKey(): 1,
+      new MonkeyString('two').hashKey(): 2,
+      new MonkeyString('three').hashKey(): 3,
+      new MonkeyInteger(4).hashKey(): 4,
+      TRUE.hashKey(): 5,
+      FALSE.hashKey(): 6,
+    };
+    expect(hash.pairs, hasLength(expected.length));
+    expected.forEach((HashKey expectedKey, int expectedValue) {
+      HashPair pair = hash.pairs[expectedKey];
+      expect(pair, isNotNull);
+      testIntegerObject(pair.value, expectedValue);
+    });
+  });
 }
 
 void testBuiltin(String input, Object expected) {

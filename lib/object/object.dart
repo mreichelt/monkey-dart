@@ -11,7 +11,8 @@ const String INTEGER_OBJ = 'INTEGER',
     FUNCTION_OBJ = 'FUNCTION',
     STRING_OBJ = 'STRING',
     BUILTIN_OBJ = 'BUILTIN',
-    ARRAY_OBJ = 'ARRAY';
+    ARRAY_OBJ = 'ARRAY',
+    HASH_OBJ = 'HASH';
 
 abstract class MonkeyObject {
   final String type;
@@ -43,11 +44,32 @@ class HashKey {
   }
 }
 
-abstract class HasHashKey {
+abstract class Hashable {
   HashKey hashKey();
 }
 
-class MonkeyInteger extends MonkeyObject implements HasHashKey {
+class HashPair {
+  MonkeyObject key;
+  MonkeyObject value;
+
+  HashPair(this.key, this.value);
+}
+
+class Hash extends MonkeyObject {
+  Map<HashKey, HashPair> pairs = {};
+
+  Hash() : super(HASH_OBJ);
+
+  @override
+  String inspect() {
+    String inspect = pairs.values
+        .map((pair) => '${pair.key.inspect()}:${pair.value.inspect()}')
+        .join(', ');
+    return '{$inspect}';
+  }
+}
+
+class MonkeyInteger extends MonkeyObject implements Hashable {
   int value;
 
   MonkeyInteger(this.value) : super(INTEGER_OBJ);
@@ -59,7 +81,7 @@ class MonkeyInteger extends MonkeyObject implements HasHashKey {
   HashKey hashKey() => new HashKey(type, value);
 }
 
-class MonkeyBoolean extends MonkeyObject implements HasHashKey {
+class MonkeyBoolean extends MonkeyObject implements Hashable {
   final bool value;
 
   const MonkeyBoolean(this.value) : super(BOOLEAN_OBJ);
@@ -107,7 +129,7 @@ class MonkeyFunction extends MonkeyObject {
   String inspect() => 'fn(${parameters.join(', ')}) {\n$body\n}';
 }
 
-class MonkeyString extends MonkeyObject implements HasHashKey {
+class MonkeyString extends MonkeyObject implements Hashable {
   final String value;
 
   MonkeyString(this.value) : super(STRING_OBJ);

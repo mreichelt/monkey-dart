@@ -77,8 +77,32 @@ MonkeyObject eval(Node node, Environment env) {
       return index;
     }
     return evalIndexExpression(left, index);
+  } else if (node is HashLiteral) {
+    return evalHashLiteral(node, env);
   }
   return null;
+}
+
+MonkeyObject evalHashLiteral(HashLiteral node, Environment env) {
+  Hash hash = new Hash();
+
+  for (Expression keyNode in node.pairs.keys) {
+    MonkeyObject key = eval(keyNode, env);
+    if (isError(key)) {
+      return key;
+    }
+    if (key is! Hashable) {
+      return new MonkeyError('unusable as hash key: ${key.type}');
+    }
+    Hashable hashable = key as Hashable;
+
+    MonkeyObject value = eval(node.pairs[keyNode], env);
+    if (isError(value)) {
+      return value;
+    }
+    hash.pairs[hashable.hashKey()] = new HashPair(key, value);
+  }
+  return hash;
 }
 
 MonkeyObject evalIndexExpression(MonkeyObject left, MonkeyObject index) {
