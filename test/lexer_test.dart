@@ -61,6 +61,7 @@ void main() {
       "foobar"
       "foo bar"
       [1, 2];
+      {"foo": "bar"}
     """;
     List<Token> expected = [
       t(Token.LET, 'let'),
@@ -144,6 +145,11 @@ void main() {
       t(Token.INT, '2'),
       t(Token.RBRACKET, ']'),
       t(Token.SEMICOLON, ';'),
+      t(Token.LBRACE, '{'),
+      t(Token.STRING, 'foo'),
+      t(Token.COLON, ':'),
+      t(Token.STRING, 'bar'),
+      t(Token.RBRACE, '}'),
       t(Token.EOF, '')
     ];
 

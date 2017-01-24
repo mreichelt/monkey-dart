@@ -21,22 +21,54 @@ abstract class MonkeyObject {
   String inspect();
 }
 
-class Integer extends MonkeyObject {
+class HashKey {
+  String type;
+  int value;
+
+  HashKey(this.type, this.value);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    return other is HashKey &&
+        this.type == other.type &&
+        this.value == other.value;
+  }
+
+  @override
+  int get hashCode {
+    return type.hashCode ^ value.hashCode;
+  }
+}
+
+abstract class HasHashKey {
+  HashKey hashKey();
+}
+
+class Integer extends MonkeyObject implements HasHashKey {
   int value;
 
   Integer(this.value) : super(INTEGER_OBJ);
 
   @override
   String inspect() => '$value';
+
+  @override
+  HashKey hashKey() => new HashKey(type, value);
 }
 
-class Boolean extends MonkeyObject {
+class Boolean extends MonkeyObject implements HasHashKey {
   final bool value;
 
   const Boolean(this.value) : super(BOOLEAN_OBJ);
 
   @override
   String inspect() => '$value';
+
+  @override
+  HashKey hashKey() => new HashKey(type, value ? 1 : 0);
 }
 
 class MonkeyNull extends MonkeyObject {
@@ -75,13 +107,16 @@ class MonkeyFunction extends MonkeyObject {
   String inspect() => 'fn(${parameters.join(', ')}) {\n$body\n}';
 }
 
-class MonkeyString extends MonkeyObject {
-  String value;
+class MonkeyString extends MonkeyObject implements HasHashKey {
+  final String value;
 
   MonkeyString(this.value) : super(STRING_OBJ);
 
   @override
   String inspect() => value;
+
+  @override
+  HashKey hashKey() => new HashKey(type, value.hashCode);
 }
 
 class Builtin extends MonkeyObject {

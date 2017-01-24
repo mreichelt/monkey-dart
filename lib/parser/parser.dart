@@ -65,6 +65,7 @@ class Parser {
     registerPrefix(Token.FUNCTION, parseFunctionLiteral);
     registerPrefix(Token.STRING, parseStringLiteral);
     registerPrefix(Token.LBRACKET, parseArrayLiteral);
+    registerPrefix(Token.LBRACE, parseHashLiteral);
 
     registerInfix(Token.PLUS, parseInfixExpression);
     registerInfix(Token.MINUS, parseInfixExpression);
@@ -382,5 +383,29 @@ class Parser {
       return null;
     }
     return expression;
+  }
+
+  HashLiteral parseHashLiteral() {
+    HashLiteral hash = new HashLiteral(currentToken);
+    while (!peekTokenIs(Token.RBRACE)) {
+      nextToken();
+      Expression key = parseExpression(Precedence.LOWEST);
+      if (!expectPeek(Token.COLON)) {
+        return null;
+      }
+      nextToken();
+      Expression value = parseExpression(Precedence.LOWEST);
+      hash.pairs[key] = value;
+
+      if (!peekTokenIs(Token.RBRACE) && !expectPeek(Token.COMMA)) {
+        return null;
+      }
+    }
+
+    if (!expectPeek(Token.RBRACE)) {
+      return null;
+    }
+
+    return hash;
   }
 }

@@ -192,6 +192,55 @@ void main() {
     testIdentifier(indexExpression.left, 'myArray');
     testInfixExpression(indexExpression.index, 1, '+', 1);
   });
+
+  test('test parsing hash literal string keys', () {
+    ExpressionStatement statement =
+        parseExpressionStatement('{"one": 1, "two": 2, "three": 3}');
+    Map<String, int> expected = {"one": 1, "two": 2, "three": 3};
+    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    HashLiteral hash = statement.expression;
+    expect(hash.pairs, hasLength(3));
+
+    hash.pairs.forEach((key, value) {
+      expect(key, new isInstanceOf<StringLiteral>());
+      StringLiteral literal = key;
+      int expectedValue = expected[literal.toString()];
+      testIntegerLiteral(value, expectedValue);
+    });
+  });
+
+  test('test parsing empty hash literal', () {
+    ExpressionStatement statement = parseExpressionStatement('{}');
+    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    HashLiteral hash = statement.expression;
+    expect(hash.pairs, isEmpty);
+  });
+
+  test('test parsing hash literal with expressions', () {
+    ExpressionStatement statement = parseExpressionStatement(
+        '{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}');
+    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    HashLiteral hash = statement.expression;
+    expect(hash.pairs, hasLength(3));
+
+    Map<String, Function> testFunctions = {
+      'one': (Expression e) {
+        testInfixExpression(e, 0, '+', 1);
+      },
+      'two': (e) {
+        testInfixExpression(e, 10, '-', 8);
+      },
+      'three': (e) {
+        testInfixExpression(e, 15, '/', 5);
+      },
+    };
+
+    hash.pairs.forEach((key, value) {
+      expect(key, new isInstanceOf<StringLiteral>());
+      StringLiteral literal = key;
+      testFunctions[literal.toString()](value);
+    });
+  });
 }
 
 void testFunctionParameters(String input, List<String> expectedParameters) {

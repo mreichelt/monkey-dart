@@ -184,3 +184,18 @@ class IndexExpression extends Expression {
   @override
   String toString() => '($left[$index])';
 }
+
+class HashLiteral extends Expression {
+  Map<Expression, Expression> pairs = {};
+
+  HashLiteral(Token token) : super(token);
+
+  @override
+  String toString() {
+    List<String> items = [];
+    pairs.forEach((key, value) {
+      items.add('$key:$value');
+    });
+    return '{${items.join(', ')}';
+  }
+}

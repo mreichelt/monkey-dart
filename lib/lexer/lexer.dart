@@ -99,6 +99,9 @@ class Lexer {
         case ']':
           token = new Token(Token.RBRACKET, ch);
           break;
+        case ':':
+          token = new Token(Token.COLON, ch);
+          break;
         default:
           if (isLetter(ch)) {
             String ident = readIdentifier();
