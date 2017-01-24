@@ -100,6 +100,8 @@ void main() {
         'unknown operator: BOOLEAN + BOOLEAN');
     testErrorHandling('foobar', 'identifier not found: foobar');
     testErrorHandling('"Hello" - "World"', 'unknown operator: STRING - STRING');
+    testErrorHandling(
+        '{"name": "Monkey"}[fn(x) { x }];', 'unusable as hash key: FUNCTION');
   });
 
   test('test let statements', () {
@@ -231,6 +233,16 @@ void main() {
       testIntegerObject(pair.value, expectedValue);
     });
   });
+
+  test('test hash index expressions', () {
+    testHashIndex('{"foo": 5}["foo"]', 5);
+    testHashIndex('{"foo": 5}["bar"]', null);
+    testHashIndex('let key = "foo"; {"foo": 5}[key]', 5);
+    testHashIndex('{}["foo"]', null);
+    testHashIndex('{5: 5}[5]', 5);
+    testHashIndex('{true: 5}[true]', 5);
+    testHashIndex('{false: 5}[false]', 5);
+  });
 }
 
 void testBuiltin(String input, Object expected) {
@@ -291,6 +303,15 @@ void testErrorHandling(String input, String expectedMessage) {
 }
 
 void testArrayIndex(String input, Object expected) {
+  MonkeyObject evaluated = testEval(input);
+  if (expected is int) {
+    testIntegerObject(evaluated, expected);
+  } else {
+    testNullObject(evaluated);
+  }
+}
+
+void testHashIndex(String input, Object expected) {
   MonkeyObject evaluated = testEval(input);
   if (expected is int) {
     testIntegerObject(evaluated, expected);

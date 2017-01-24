@@ -108,6 +108,8 @@ MonkeyObject evalHashLiteral(HashLiteral node, Environment env) {
 MonkeyObject evalIndexExpression(MonkeyObject left, MonkeyObject index) {
   if (left.type == ARRAY_OBJ && index.type == INTEGER_OBJ) {
     return evalArrayIndexExpression(left, index);
+  } else if (left.type == HASH_OBJ) {
+    return evalHashIndexExpression(left, index);
   } else {
     return new MonkeyError('index operator not supported: ${left.type}');
   }
@@ -118,6 +120,14 @@ MonkeyObject evalArrayIndexExpression(MonkeyArray array, MonkeyInteger index) {
   int max = array.elements.length - 1;
   bool outOfRange = idx < 0 || idx > max;
   return outOfRange ? NULL : array.elements[idx];
+}
+
+MonkeyObject evalHashIndexExpression(Hash hash, MonkeyObject index) {
+  if (index is! Hashable) {
+    return new MonkeyError('unusable as hash key: ${index.type}');
+  }
+  HashPair pair = hash.pairs[(index as Hashable).hashKey()];
+  return pair == null ? NULL : pair.value;
 }
 
 MonkeyObject evalIdentifier(Identifier node, Environment env) {
