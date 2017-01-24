@@ -13,20 +13,20 @@ void main() {
   });
 
   test('test boolean hashkey', () {
-    Boolean true1 = new Boolean(true);
-    Boolean true2 = new Boolean(true);
-    Boolean false1 = new Boolean(false);
-    Boolean false2 = new Boolean(false);
+    MonkeyBoolean true1 = new MonkeyBoolean(true);
+    MonkeyBoolean true2 = new MonkeyBoolean(true);
+    MonkeyBoolean false1 = new MonkeyBoolean(false);
+    MonkeyBoolean false2 = new MonkeyBoolean(false);
     expect(true1.hashKey(), equals(true2.hashKey()));
     expect(false1.hashKey(), equals(false2.hashKey()));
     expect(true1.hashKey(), isNot(equals(false1.hashKey())));
   });
 
   test('test integer hashkey', () {
-    Integer one1 = new Integer(1);
-    Integer one2 = new Integer(1);
-    Integer two1 = new Integer(2);
-    Integer two2 = new Integer(2);
+    MonkeyInteger one1 = new MonkeyInteger(1);
+    MonkeyInteger one2 = new MonkeyInteger(1);
+    MonkeyInteger two1 = new MonkeyInteger(2);
+    MonkeyInteger two2 = new MonkeyInteger(2);
     expect(one1.hashKey(), equals(one2.hashKey()));
     expect(two1.hashKey(), equals(two2.hashKey()));
     expect(one1.hashKey(), isNot(equals(two1.hashKey())));

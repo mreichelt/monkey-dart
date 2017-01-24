@@ -47,10 +47,10 @@ abstract class HasHashKey {
   HashKey hashKey();
 }
 
-class Integer extends MonkeyObject implements HasHashKey {
+class MonkeyInteger extends MonkeyObject implements HasHashKey {
   int value;
 
-  Integer(this.value) : super(INTEGER_OBJ);
+  MonkeyInteger(this.value) : super(INTEGER_OBJ);
 
   @override
   String inspect() => '$value';
@@ -59,10 +59,10 @@ class Integer extends MonkeyObject implements HasHashKey {
   HashKey hashKey() => new HashKey(type, value);
 }
 
-class Boolean extends MonkeyObject implements HasHashKey {
+class MonkeyBoolean extends MonkeyObject implements HasHashKey {
   final bool value;
 
-  const Boolean(this.value) : super(BOOLEAN_OBJ);
+  const MonkeyBoolean(this.value) : super(BOOLEAN_OBJ);
 
   @override
   String inspect() => '$value';

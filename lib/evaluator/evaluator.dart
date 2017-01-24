@@ -6,8 +6,8 @@ import 'package:monkey_dart/object/environment.dart';
 import 'package:monkey_dart/object/object.dart';
 
 const MonkeyNull NULL = const MonkeyNull();
-const Boolean TRUE = const Boolean(true);
-const Boolean FALSE = const Boolean(false);
+const MonkeyBoolean TRUE = const MonkeyBoolean(true);
+const MonkeyBoolean FALSE = const MonkeyBoolean(false);
 
 MonkeyObject eval(Node node, Environment env) {
   if (node is Program) {
@@ -15,7 +15,7 @@ MonkeyObject eval(Node node, Environment env) {
   } else if (node is ExpressionStatement) {
     return eval(node.expression, env);
   } else if (node is IntegerLiteral) {
-    return new Integer(node.value);
+    return new MonkeyInteger(node.value);
   } else if (node is BooleanLiteral) {
     return nativeBoolToBooleanObject(node.value);
   } else if (node is PrefixExpression) {
@@ -89,7 +89,7 @@ MonkeyObject evalIndexExpression(MonkeyObject left, MonkeyObject index) {
   }
 }
 
-MonkeyObject evalArrayIndexExpression(MonkeyArray array, Integer index) {
+MonkeyObject evalArrayIndexExpression(MonkeyArray array, MonkeyInteger index) {
   int idx = index.value;
   int max = array.elements.length - 1;
   bool outOfRange = idx < 0 || idx > max;
@@ -196,16 +196,16 @@ MonkeyObject evalInfixExpression(
 }
 
 MonkeyObject evalIntegerInfixExpression(
-    String operator, Integer left, Integer right) {
+    String operator, MonkeyInteger left, MonkeyInteger right) {
   switch (operator) {
     case '+':
-      return new Integer(left.value + right.value);
+      return new MonkeyInteger(left.value + right.value);
     case '-':
-      return new Integer(left.value - right.value);
+      return new MonkeyInteger(left.value - right.value);
     case '*':
-      return new Integer(left.value * right.value);
+      return new MonkeyInteger(left.value * right.value);
     case '/':
-      return new Integer(left.value ~/ right.value);
+      return new MonkeyInteger(left.value ~/ right.value);
     case '<':
       return nativeBoolToBooleanObject(left.value < right.value);
     case '>':
@@ -258,10 +258,10 @@ MonkeyObject evalMinusPrefixOperatorExpression(MonkeyObject right) {
   if (right.type != INTEGER_OBJ) {
     return new MonkeyError('unknown operator: -${right.type}');
   }
-  return new Integer(-(right as Integer).value);
+  return new MonkeyInteger(-(right as MonkeyInteger).value);
 }
 
-Boolean nativeBoolToBooleanObject(bool value) => value ? TRUE : FALSE;
+MonkeyBoolean nativeBoolToBooleanObject(bool value) => value ? TRUE : FALSE;
 
 MonkeyObject evalStatements(List<Statement> statements, Environment env) {
   MonkeyObject result;

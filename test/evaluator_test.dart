@@ -274,14 +274,14 @@ void testNullObject(MonkeyObject object) {
 }
 
 void testIntegerObject(MonkeyObject object, int expected) {
-  expect(object, new isInstanceOf<Integer>());
-  Integer integer = object;
+  expect(object, new isInstanceOf<MonkeyInteger>());
+  MonkeyInteger integer = object;
   expect(integer.value, equals(expected));
 }
 
 void testBooleanObject(MonkeyObject object, bool expected) {
-  expect(object, new isInstanceOf<Boolean>());
-  Boolean boolean = object;
+  expect(object, new isInstanceOf<MonkeyBoolean>());
+  MonkeyBoolean boolean = object;
   expect(boolean.value, equals(expected));
 }
 
