@@ -90,5 +90,11 @@ final Map<String, Builtin> builtins = {
     MonkeyArray array = args.first;
     return new MonkeyArray(
         new List<MonkeyObject>.from(array.elements)..add(args[1]));
+  }),
+  'puts': new Builtin((List<MonkeyObject> args) {
+    args.forEach((MonkeyObject arg) {
+      print(arg.inspect());
+    });
+    return NULL;
   })
 };

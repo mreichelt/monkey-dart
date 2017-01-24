@@ -166,7 +166,7 @@ void main() {
         'len("one", "two")', "wrong number of arguments. got=2, want=1");
     testBuiltin('len([1, 2, 3])', 3);
     testBuiltin('len([])', 0);
-    //testBuiltin('puts("hello", "world!")', null);
+    testBuiltin('puts("hello", "world!")', null);
     testBuiltin('first([1, 2, 3])', 1);
     testBuiltin('first([])', null);
     testBuiltin('first(1)', 'argument to `first` must be ARRAY, got INTEGER');
