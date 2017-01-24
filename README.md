@@ -4,6 +4,14 @@
 
 A fully working interpreter for the Monkey programming language as known from the book [Writing an Interpreter in Go](https://interpreterbook.com/), written in [Dart](https://www.dartlang.org/).
 
+Before you start, get the dependencies:
+
+```sh
+$ pub get
+Resolving dependencies...
+[...]
+```
+
 ### Go ahead and start the REPL
 
 ```
