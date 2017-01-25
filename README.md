@@ -2,20 +2,22 @@
 
 [![Build Status](https://travis-ci.org/mreichelt/monkey-dart.svg?branch=master)](https://travis-ci.org/mreichelt/monkey-dart)
 
-A fully working interpreter for the Monkey programming language as known from the book [Writing an Interpreter in Go](https://interpreterbook.com/), written in [Dart](https://www.dartlang.org/).
+A fully working interpreter for the Monkey 🐒 programming language as known from the book [Writing an Interpreter in Go](https://interpreterbook.com/), written in [Dart](https://www.dartlang.org/).
 
-Before you start, get the dependencies:
+### Install Monkey and start the REPL
+
+With one command, you can install the `monkey` binary:
+```sh
+$ pub global activate monkey_lang
+Downloading monkey_lang 0.9.1...
+[...]
+Installed executable monkey.
+```
+
+Now you can run `monkey` from anywhere you want!
 
 ```sh
-$ pub get
-Resolving dependencies...
-[...]
-```
-
-### Go ahead and start the REPL
-
-```
-$ dart lib/repl/repl.dart
+$ monkey
 Hello! This is the Monkey programming language!
 Feel free to type in commands
 >> let answer = fn(){ 6*7; };
@@ -43,8 +45,4 @@ Analyzing [.]...
 No issues found
 ```
 
-### TODOs
-
-- Tell the world about how awesome the book is!
-- Create Dart library so every Dart developer can import the Monkey language
-- Surprise…
+Go ahead and have fun with Monkey!
