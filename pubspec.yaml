@@ -1,6 +1,6 @@
 name: monkey_lang
 version: 0.9.0
-description: Implementing a Monkey programming language interpreter in Dart.
+description: Monkey programming language interpreter in Dart.
 author: Marc Reichelt <mcreichelt@gmail.com>
 homepage: https://github.com/mreichelt/monkey-dart
 executables:
