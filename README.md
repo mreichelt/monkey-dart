@@ -1,8 +1,8 @@
-# Writing an Interpreter in Dart
+# Writing an Interpreter for the Monkey 🐒 Language in Dart
 
 [![Build Status](https://travis-ci.org/mreichelt/monkey-dart.svg?branch=master)](https://travis-ci.org/mreichelt/monkey-dart)
 
-A fully working interpreter for the Monkey 🐒 programming language as known from the book [Writing an Interpreter in Go](https://interpreterbook.com/), written in [Dart](https://www.dartlang.org/).
+A fully working interpreter for the Monkey programming language as known from the book [Writing an Interpreter in Go](https://interpreterbook.com/), written in [Dart](https://www.dartlang.org/).
 
 ### Install Monkey and start the REPL
 
