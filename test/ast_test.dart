@@ -1,5 +1,5 @@
-import 'package:monkey_dart/ast/ast.dart';
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_lang/ast/ast.dart';
+import 'package:monkey_lang/token/token.dart';
 import 'package:test/test.dart';
 
 void main() {

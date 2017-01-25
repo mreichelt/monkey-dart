@@ -1,8 +1,6 @@
-library parser;
-
-import 'package:monkey_dart/ast/ast.dart';
-import 'package:monkey_dart/lexer/lexer.dart';
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_lang/ast/ast.dart';
+import 'package:monkey_lang/lexer/lexer.dart';
+import 'package:monkey_lang/token/token.dart';
 
 enum Precedence {
   LOWEST,

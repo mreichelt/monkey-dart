@@ -1,4 +1,4 @@
-import 'package:monkey_dart/object/object.dart';
+import 'package:monkey_lang/object/object.dart';
 import 'package:test/test.dart';
 
 void main() {

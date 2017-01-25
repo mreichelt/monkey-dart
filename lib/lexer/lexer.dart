@@ -1,6 +1,4 @@
-library lexer;
-
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_lang/token/token.dart';
 
 class Lexer {
   String input;

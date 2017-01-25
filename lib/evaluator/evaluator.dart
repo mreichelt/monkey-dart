@@ -1,9 +1,7 @@
-library evaluator;
-
-import 'package:monkey_dart/ast/ast.dart';
-import 'package:monkey_dart/evaluator/builtins.dart';
-import 'package:monkey_dart/object/environment.dart';
-import 'package:monkey_dart/object/object.dart';
+import 'package:monkey_lang/ast/ast.dart';
+import 'package:monkey_lang/evaluator/builtins.dart';
+import 'package:monkey_lang/object/environment.dart';
+import 'package:monkey_lang/object/object.dart';
 
 const MonkeyNull NULL = const MonkeyNull();
 const MonkeyBoolean TRUE = const MonkeyBoolean(true);

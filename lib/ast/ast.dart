@@ -1,6 +1,4 @@
-library ast;
-
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_lang/token/token.dart';
 
 abstract class Node {
   String tokenLiteral();

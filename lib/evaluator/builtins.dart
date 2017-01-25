@@ -1,7 +1,5 @@
-library builtins;
-
-import 'package:monkey_dart/evaluator/evaluator.dart';
-import 'package:monkey_dart/object/object.dart';
+import 'package:monkey_lang/evaluator/evaluator.dart';
+import 'package:monkey_lang/object/object.dart';
 
 final Map<String, Builtin> builtins = {
   'len': new Builtin((List<MonkeyObject> args) {

@@ -1,6 +1,4 @@
-library environment;
-
-import 'package:monkey_dart/object/object.dart';
+import 'package:monkey_lang/object/object.dart';
 
 class Environment {
   final Map<String, MonkeyObject> store = {};

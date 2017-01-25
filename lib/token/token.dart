@@ -1,5 +1,3 @@
-library token;
-
 class Token {
   static const ILLEGAL = 'ILLEGAL',
       EOF = 'EOF',

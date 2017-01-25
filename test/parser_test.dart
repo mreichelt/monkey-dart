@@ -1,6 +1,6 @@
-import 'package:monkey_dart/ast/ast.dart';
-import 'package:monkey_dart/lexer/lexer.dart';
-import 'package:monkey_dart/parser/parser.dart';
+import 'package:monkey_lang/ast/ast.dart';
+import 'package:monkey_lang/lexer/lexer.dart';
+import 'package:monkey_lang/parser/parser.dart';
 import 'package:test/test.dart';
 
 void main() {

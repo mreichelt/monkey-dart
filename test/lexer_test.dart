@@ -1,5 +1,5 @@
-import 'package:monkey_dart/lexer/lexer.dart';
-import 'package:monkey_dart/token/token.dart';
+import 'package:monkey_lang/lexer/lexer.dart';
+import 'package:monkey_lang/token/token.dart';
 import 'package:test/test.dart';
 
 Token t(String tokenType, String literal) {

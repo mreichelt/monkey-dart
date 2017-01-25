@@ -1,7 +1,5 @@
-library object;
-
-import 'package:monkey_dart/ast/ast.dart';
-import 'package:monkey_dart/object/environment.dart';
+import 'package:monkey_lang/ast/ast.dart';
+import 'package:monkey_lang/object/environment.dart';
 
 const String INTEGER_OBJ = 'INTEGER',
     BOOLEAN_OBJ = 'BOOLEAN',
