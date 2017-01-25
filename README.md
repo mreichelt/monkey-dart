@@ -16,7 +16,7 @@ Installed executable monkey.
 
 Now you can run `monkey` from anywhere you want!
 
-```sh
+```
 $ monkey
 Hello! This is the Monkey programming language!
 Feel free to type in commands
