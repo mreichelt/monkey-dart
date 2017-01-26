@@ -107,15 +107,6 @@ class ReturnValue extends MonkeyObject {
   String inspect() => value.inspect();
 }
 
-class MonkeyError extends MonkeyObject {
-  final String message;
-
-  const MonkeyError(this.message) : super(ERROR_OBJ);
-
-  @override
-  String inspect() => 'ERROR: $message';
-}
-
 class MonkeyFunction extends MonkeyObject {
   List<Identifier> parameters;
   Environment env;
@@ -156,4 +147,12 @@ class MonkeyArray extends MonkeyObject {
   @override
   String inspect() =>
       '[${elements.map((object) => object.inspect()).join(', ')}]';
+}
+
+class MonkeyError extends Error {
+  final String message;
+
+  MonkeyError(this.message);
+
+  String toString() => 'ERROR: $message';
 }

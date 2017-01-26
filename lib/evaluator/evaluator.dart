@@ -17,18 +17,10 @@ MonkeyObject eval(Node node, Environment env) {
   } else if (node is BooleanLiteral) {
     return nativeBoolToBooleanObject(node.value);
   } else if (node is PrefixExpression) {
-    var right = eval(node.right, env);
-    return isError(right) ? right : evalPrefixExpression(node.operator, right);
+    return evalPrefixExpression(node.operator, eval(node.right, env));
   } else if (node is InfixExpression) {
     var left = eval(node.left, env);
-    if (isError(left)) {
-      return left;
-    }
-
     var right = eval(node.right, env);
-    if (isError(right)) {
-      return right;
-    }
     return evalInfixExpression(node.operator, left, right);
   } else if (node is BlockStatement) {
     return evalBlockStatement(node, env);
@@ -36,12 +28,9 @@ MonkeyObject eval(Node node, Environment env) {
     return evalIfExpression(node, env);
   } else if (node is ReturnStatement) {
     var value = eval(node.returnValue, env);
-    return isError(value) ? value : new ReturnValue(value);
+    return new ReturnValue(value);
   } else if (node is LetStatement) {
     var value = eval(node.value, env);
-    if (isError(value)) {
-      return value;
-    }
     env.set(node.name.value, value);
   } else if (node is Identifier) {
     return evalIdentifier(node, env);
@@ -49,31 +38,16 @@ MonkeyObject eval(Node node, Environment env) {
     return new MonkeyFunction(node.parameters, env, node.body);
   } else if (node is CallExpression) {
     MonkeyObject function = eval(node.function, env);
-    if (isError(function)) {
-      return function;
-    }
     List<MonkeyObject> args = evalExpressions(node.arguments, env);
-    if (args.length == 1 && isError(args.first)) {
-      return args.first;
-    }
     return applyFunction(function, args);
   } else if (node is StringLiteral) {
     return new MonkeyString(node.value);
   } else if (node is ArrayLiteral) {
     List<MonkeyObject> elements = evalExpressions(node.elements, env);
-    if (elements.length == 1 && elements.first is MonkeyError) {
-      return elements.first;
-    }
     return new MonkeyArray(elements);
   } else if (node is IndexExpression) {
     MonkeyObject left = eval(node.left, env);
-    if (isError(left)) {
-      return left;
-    }
     MonkeyObject index = eval(node.index, env);
-    if (isError(index)) {
-      return index;
-    }
     return evalIndexExpression(left, index);
   } else if (node is HashLiteral) {
     return evalHashLiteral(node, env);
@@ -86,18 +60,12 @@ MonkeyObject evalHashLiteral(HashLiteral node, Environment env) {
 
   for (Expression keyNode in node.pairs.keys) {
     MonkeyObject key = eval(keyNode, env);
-    if (isError(key)) {
-      return key;
-    }
     if (key is! Hashable) {
-      return new MonkeyError('unusable as hash key: ${key.type}');
+      throw new MonkeyError('unusable as hash key: ${key.type}');
     }
     Hashable hashable = key as Hashable;
 
     MonkeyObject value = eval(node.pairs[keyNode], env);
-    if (isError(value)) {
-      return value;
-    }
     hash.pairs[hashable.hashKey()] = new HashPair(key, value);
   }
   return hash;
@@ -109,7 +77,7 @@ MonkeyObject evalIndexExpression(MonkeyObject left, MonkeyObject index) {
   } else if (left.type == HASH_OBJ) {
     return evalHashIndexExpression(left, index);
   } else {
-    return new MonkeyError('index operator not supported: ${left.type}');
+    throw new MonkeyError('index operator not supported: ${left.type}');
   }
 }
 
@@ -122,7 +90,7 @@ MonkeyObject evalArrayIndexExpression(MonkeyArray array, MonkeyInteger index) {
 
 MonkeyObject evalHashIndexExpression(Hash hash, MonkeyObject index) {
   if (index is! Hashable) {
-    return new MonkeyError('unusable as hash key: ${index.type}');
+    throw new MonkeyError('unusable as hash key: ${index.type}');
   }
   HashPair pair = hash.pairs[(index as Hashable).hashKey()];
   return pair == null ? NULL : pair.value;
@@ -139,7 +107,7 @@ MonkeyObject evalIdentifier(Identifier node, Environment env) {
     return builtin;
   }
 
-  return new MonkeyError('identifier not found: ${node.value}');
+  throw new MonkeyError('identifier not found: ${node.value}');
 }
 
 List<MonkeyObject> evalExpressions(
@@ -147,9 +115,6 @@ List<MonkeyObject> evalExpressions(
   List<MonkeyObject> result = [];
   for (int i = 0; i < expressions.length; i++) {
     MonkeyObject evaluated = eval(expressions[i], env);
-    if (isError(evaluated)) {
-      return [evaluated];
-    }
     result.add(evaluated);
   }
   return result;
@@ -183,9 +148,6 @@ MonkeyObject evalBlockStatement(BlockStatement block, Environment env) {
 
 MonkeyObject evalIfExpression(IfExpression expression, Environment env) {
   MonkeyObject condition = eval(expression.condition, env);
-  if (isError(condition)) {
-    return condition;
-  }
 
   if (isTruthy(condition)) {
     return eval(expression.consequence, env);
@@ -219,10 +181,10 @@ MonkeyObject evalInfixExpression(
   } else if (operator == '!=') {
     return nativeBoolToBooleanObject(left != right);
   } else if (left.type != right.type) {
-    return new MonkeyError('type mismatch: ${left.type} '
+    throw new MonkeyError('type mismatch: ${left.type} '
         '$operator ${right.type}');
   } else {
-    return new MonkeyError('unknown operator: ${left.type} '
+    throw new MonkeyError('unknown operator: ${left.type} '
         '$operator ${right.type}');
   }
 }
@@ -247,7 +209,7 @@ MonkeyObject evalIntegerInfixExpression(
     case '!=':
       return nativeBoolToBooleanObject(left.value != right.value);
     default:
-      return new MonkeyError('unknown operator: ${left.type} '
+      throw new MonkeyError('unknown operator: ${left.type} '
           '$operator ${right.type}');
   }
 }
@@ -258,7 +220,7 @@ MonkeyObject evalStringInfixExpression(
     case '+':
       return new MonkeyString(left.value + right.value);
     default:
-      return new MonkeyError('unknown operator: ${left.type} '
+      throw new MonkeyError('unknown operator: ${left.type} '
           '$operator ${right.type}');
   }
 }
@@ -270,7 +232,7 @@ MonkeyObject evalPrefixExpression(String operator, MonkeyObject right) {
     case '-':
       return evalMinusPrefixOperatorExpression(right);
     default:
-      return new MonkeyError('unknown operator: $operator${right.type}');
+      throw new MonkeyError('unknown operator: $operator${right.type}');
   }
 }
 
@@ -288,7 +250,7 @@ MonkeyObject evalBangOperatorExpression(MonkeyObject right) {
 
 MonkeyObject evalMinusPrefixOperatorExpression(MonkeyObject right) {
   if (right.type != INTEGER_OBJ) {
-    return new MonkeyError('unknown operator: -${right.type}');
+    throw new MonkeyError('unknown operator: -${right.type}');
   }
   return new MonkeyInteger(-(right as MonkeyInteger).value);
 }
@@ -306,13 +268,6 @@ MonkeyObject evalStatements(List<Statement> statements, Environment env) {
   return result;
 }
 
-bool isError(MonkeyObject object) {
-  if (object != null) {
-    return object.type == ERROR_OBJ;
-  }
-  return false;
-}
-
 MonkeyObject applyFunction(MonkeyObject function, List<MonkeyObject> args) {
   if (function is MonkeyFunction) {
     Environment extendedEnv = extendFunctionEnv(function, args);
@@ -321,7 +276,7 @@ MonkeyObject applyFunction(MonkeyObject function, List<MonkeyObject> args) {
   } else if (function is Builtin) {
     return function.fn(args);
   } else {
-    return new MonkeyError('not a function: ${function.type}');
+    throw new MonkeyError('not a function: ${function.type}');
   }
 }
 

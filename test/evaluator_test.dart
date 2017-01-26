@@ -246,12 +246,14 @@ void main() {
 }
 
 void testBuiltin(String input, Object expected) {
+  if (expected is String) {
+    expect(() => testEval(input), throwsMonkeyError(expected));
+    return;
+  }
+
   MonkeyObject evaluated = testEval(input);
   if (expected is int) {
     testIntegerObject(evaluated, expected);
-  } else if (expected is String) {
-    expect(evaluated, new isInstanceOf<MonkeyError>());
-    expect((evaluated as MonkeyError).message, equals(expected));
   } else if (expected == null) {
     testNullObject(evaluated);
   } else if (expected is List<int>) {
@@ -296,11 +298,11 @@ void testReturnStatement(String input, int expected) {
 }
 
 void testErrorHandling(String input, String expectedMessage) {
-  MonkeyObject evaluated = testEval(input);
-  expect(evaluated, new isInstanceOf<MonkeyError>());
-  MonkeyError error = evaluated;
-  expect(error.message, equals(expectedMessage));
+  expect(() => testEval(input), throwsMonkeyError(expectedMessage));
 }
+
+Matcher throwsMonkeyError(String expectedMessage) =>
+    throwsA(predicate((e) => e is MonkeyError && e.message == expectedMessage));
 
 void testArrayIndex(String input, Object expected) {
   MonkeyObject evaluated = testEval(input);
