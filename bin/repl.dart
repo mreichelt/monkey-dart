@@ -39,9 +39,13 @@ void start() {
       continue;
     }
 
-    MonkeyObject evaluated = eval(program, env);
-    if (evaluated != null) {
-      print(evaluated.inspect());
+    try {
+      MonkeyObject evaluated = eval(program, env);
+      if (evaluated != null) {
+        print(evaluated.inspect());
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }
