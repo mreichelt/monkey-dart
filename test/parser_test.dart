@@ -241,6 +241,19 @@ void main() {
       testFunctions[literal.toString()](value);
     });
   });
+
+  test('test parser errors for unclosed statements', () {
+    testParserError('{');
+    testParserError('(');
+    testParserError('fn(');
+    testParserError('if(');
+  });
+}
+
+void testParserError(String input) {
+  Parser parser = new Parser(new Lexer(input));
+  parser.parseProgram();
+  expect(parser.errors, isNotEmpty);
 }
 
 void testFunctionParameters(String input, List<String> expectedParameters) {

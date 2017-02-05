@@ -289,7 +289,7 @@ class Parser {
   BlockStatement parseBlockStatement() {
     BlockStatement block = new BlockStatement(currentToken);
     nextToken();
-    while (!currentTokenIs(Token.RBRACE)) {
+    while (!currentTokenIs(Token.RBRACE) && !currentTokenIs(Token.EOF)) {
       Statement statement = parseStatement();
       if (statement != null) {
         block.statements.add(statement);
