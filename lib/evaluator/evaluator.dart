@@ -7,10 +7,6 @@ const MonkeyNull NULL = const MonkeyNull();
 const MonkeyBoolean TRUE = const MonkeyBoolean(true);
 const MonkeyBoolean FALSE = const MonkeyBoolean(false);
 
-Function monkeyPrint = (Object object) {
-  print(object);
-};
-
 MonkeyObject eval(Node node, Environment env) {
   if (node is Program) {
     return evalProgram(node, env);

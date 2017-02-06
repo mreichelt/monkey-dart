@@ -1,5 +1,6 @@
 import 'package:monkey_lang/ast/ast.dart';
 import 'package:monkey_lang/lexer/lexer.dart';
+import 'package:monkey_lang/monkey/monkey.dart';
 import 'package:monkey_lang/token/token.dart';
 
 enum Precedence {
@@ -405,5 +406,15 @@ class Parser {
     }
 
     return hash;
+  }
+
+  bool hasErrors() => errors.isNotEmpty;
+
+  String getErrorsAsString() {
+    return '${Monkey.FACE}\n'
+        'Woops! We ran into some monkey business here!\n'
+        ' parser errors:\n' +
+        errors.fold('',
+            (prev, element) => prev == '' ? '\t$element' : '$prev\n\t$element');
   }
 }

@@ -1,4 +1,5 @@
 import 'package:monkey_lang/evaluator/evaluator.dart';
+import 'package:monkey_lang/monkey/monkey.dart';
 import 'package:monkey_lang/object/object.dart';
 
 final Map<String, Builtin> builtins = {
@@ -91,7 +92,7 @@ final Map<String, Builtin> builtins = {
   }),
   'puts': new Builtin((List<MonkeyObject> args) {
     args.forEach((MonkeyObject arg) {
-      monkeyPrint(arg.inspect());
+      Monkey.monkeyPrint(arg.inspect());
     });
     return NULL;
   })
