@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:monkey_lang/ast/ast.dart';
-import 'package:monkey_lang/lexer/lexer.dart';
-import 'package:monkey_lang/parser/parser.dart';
-import 'package:monkey_lang/object/object.dart';
-import 'package:monkey_lang/object/environment.dart';
 import 'package:monkey_lang/evaluator/evaluator.dart';
+import 'package:monkey_lang/lexer/lexer.dart';
+import 'package:monkey_lang/object/environment.dart';
+import 'package:monkey_lang/object/object.dart';
+import 'package:monkey_lang/parser/parser.dart';
 
 const MONKEY_FACE = r"""            __,__
    .--.  .-"     "-.  .--.

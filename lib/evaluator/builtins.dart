@@ -91,7 +91,7 @@ final Map<String, Builtin> builtins = {
   }),
   'puts': new Builtin((List<MonkeyObject> args) {
     args.forEach((MonkeyObject arg) {
-      print(arg.inspect());
+      monkeyPrint(arg.inspect());
     });
     return NULL;
   })
