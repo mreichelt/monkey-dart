@@ -76,7 +76,7 @@ class MonkeyInteger extends MonkeyObject implements Hashable {
   String inspect() => '$value';
 
   @override
-  HashKey hashKey() => new HashKey(type, value);
+  HashKey hashKey() => HashKey(type, value);
 }
 
 class MonkeyBoolean extends MonkeyObject implements Hashable {
@@ -88,7 +88,7 @@ class MonkeyBoolean extends MonkeyObject implements Hashable {
   String inspect() => '$value';
 
   @override
-  HashKey hashKey() => new HashKey(type, value ? 1 : 0);
+  HashKey hashKey() => HashKey(type, value ? 1 : 0);
 }
 
 class MonkeyNull extends MonkeyObject {
@@ -127,7 +127,7 @@ class MonkeyString extends MonkeyObject implements Hashable {
   String inspect() => value;
 
   @override
-  HashKey hashKey() => new HashKey(type, value.hashCode);
+  HashKey hashKey() => HashKey(type, value.hashCode);
 }
 
 class Builtin extends MonkeyObject {

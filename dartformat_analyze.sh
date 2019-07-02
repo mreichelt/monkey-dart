@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-dartfmt -w lib/ test/
-dartanalyzer --strong .
+dartfmt --fix -w lib/ test/
+dartanalyzer .

@@ -39,7 +39,7 @@ class Token {
       ELSE = 'ELSE',
       RETURN = 'RETURN';
 
-  static const Map<String, String> keywords = const {
+  static const Map<String, String> keywords = {
     'fn': Token.FUNCTION,
     'let': Token.LET,
     'true': Token.TRUE,

@@ -31,7 +31,7 @@ class Program extends Node {
 
   @override
   String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuffer sb = StringBuffer();
     statements.forEach((statement) => sb.write(statement));
     return sb.toString();
   }
@@ -121,9 +121,8 @@ class IfExpression extends Expression {
   IfExpression(Token token) : super(token);
 
   @override
-  String toString() => 'if$condition $consequence ${alternative == null
-      ? ''
-      : 'else $alternative'}';
+  String toString() =>
+      'if$condition $consequence ${alternative == null ? '' : 'else $alternative'}';
 }
 
 class BlockStatement extends Statement {
