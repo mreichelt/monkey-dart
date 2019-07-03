@@ -70,16 +70,14 @@ void main() {
     testReturnStatement('return 10; 9;', 10);
     testReturnStatement('return 2 * 5; 9;', 10);
     testReturnStatement('9; return 2 * 5; 9;', 10);
-    testReturnStatement(
-        '''
+    testReturnStatement('''
       if (10 > 1) {
         if (10 > 1) {
           return 10;
         }
         return 1;
       }
-    ''',
-        10);
+    ''', 10);
   });
 
   test('test error handling', () {
@@ -89,15 +87,13 @@ void main() {
     testErrorHandling('true + false;', 'unknown operator: BOOLEAN + BOOLEAN');
     testErrorHandling(
         'if (10 > 1) { true + false; }', 'unknown operator: BOOLEAN + BOOLEAN');
-    testErrorHandling(
-        '''if (10 > 1) {
+    testErrorHandling('''if (10 > 1) {
       if (10 > 1) {
         return true + false;
        }
        return 1;
       }
-    ''',
-        'unknown operator: BOOLEAN + BOOLEAN');
+    ''', 'unknown operator: BOOLEAN + BOOLEAN');
     testErrorHandling('foobar', 'identifier not found: foobar');
     testErrorHandling('"Hello" - "World"', 'unknown operator: STRING - STRING');
     testErrorHandling(
@@ -113,7 +109,7 @@ void main() {
 
   test('test function object', () {
     MonkeyObject evaluated = testEval('fn(x) { x + 2; };');
-    expect(evaluated, new isInstanceOf<MonkeyFunction>());
+    expect(evaluated, isA<MonkeyFunction>());
     MonkeyFunction function = evaluated;
 
     expect(function.parameters, hasLength(1));
@@ -132,27 +128,25 @@ void main() {
   });
 
   test('test closures', () {
-    testEvalInteger(
-        '''
+    testEvalInteger('''
     let newAdder = fn(x) {
       fn(y) { x + y };
     };
     let addTwo = newAdder(2);
     addTwo(2);
-   ''',
-        4);
+   ''', 4);
   });
 
   test('test string literal', () {
     MonkeyObject evaluated = testEval('"Hello World!"');
-    expect(evaluated, new isInstanceOf<MonkeyString>());
+    expect(evaluated, isA<MonkeyString>());
     MonkeyString string = evaluated;
     expect(string.value, equals('Hello World!'));
   });
 
   test('test string concatenation', () {
     MonkeyObject evaluated = testEval('"Hello" + " " + "World!"');
-    expect(evaluated, new isInstanceOf<MonkeyString>());
+    expect(evaluated, isA<MonkeyString>());
     MonkeyString string = evaluated;
     expect(string.value, equals('Hello World!'));
   });
@@ -181,7 +175,7 @@ void main() {
 
   test('test array literals', () {
     MonkeyObject evaluated = testEval('[1, 2 * 2, 3 + 3]');
-    expect(evaluated, new isInstanceOf<MonkeyArray>());
+    expect(evaluated, isA<MonkeyArray>());
     MonkeyArray array = evaluated;
     expect(array.elements, hasLength(3));
     testIntegerObject(array.elements[0], 1);
@@ -216,13 +210,13 @@ void main() {
         false: 6
       }
     """);
-    expect(evaluated, new isInstanceOf<Hash>());
+    expect(evaluated, isA<Hash>());
     Hash hash = evaluated;
     Map<HashKey, int> expected = {
-      new MonkeyString('one').hashKey(): 1,
-      new MonkeyString('two').hashKey(): 2,
-      new MonkeyString('three').hashKey(): 3,
-      new MonkeyInteger(4).hashKey(): 4,
+      MonkeyString('one').hashKey(): 1,
+      MonkeyString('two').hashKey(): 2,
+      MonkeyString('three').hashKey(): 3,
+      MonkeyInteger(4).hashKey(): 4,
       TRUE.hashKey(): 5,
       FALSE.hashKey(): 6,
     };
@@ -257,7 +251,7 @@ void testBuiltin(String input, Object expected) {
   } else if (expected == null) {
     testNullObject(evaluated);
   } else if (expected is List<int>) {
-    expect(evaluated, new isInstanceOf<MonkeyArray>());
+    expect(evaluated, isA<MonkeyArray>());
     MonkeyArray array = evaluated;
     expect(array.elements, hasLength(expected.length));
     for (int i = 0; i < expected.length; i++) {
@@ -327,18 +321,18 @@ void testNullObject(MonkeyObject object) {
 }
 
 void testIntegerObject(MonkeyObject object, int expected) {
-  expect(object, new isInstanceOf<MonkeyInteger>());
+  expect(object, isA<MonkeyInteger>());
   MonkeyInteger integer = object;
   expect(integer.value, equals(expected));
 }
 
 void testBooleanObject(MonkeyObject object, bool expected) {
-  expect(object, new isInstanceOf<MonkeyBoolean>());
+  expect(object, isA<MonkeyBoolean>());
   MonkeyBoolean boolean = object;
   expect(boolean.value, equals(expected));
 }
 
 MonkeyObject testEval(String input) {
-  Parser parser = new Parser(new Lexer(input));
-  return eval(parser.parseProgram(), new Environment.freshEnvironment());
+  Parser parser = Parser(Lexer(input));
+  return eval(parser.parseProgram(), Environment.freshEnvironment());
 }

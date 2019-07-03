@@ -3,31 +3,30 @@ import 'package:monkey_lang/monkey/monkey.dart';
 import 'package:monkey_lang/object/object.dart';
 
 final Map<String, Builtin> builtins = {
-  'len': new Builtin((List<MonkeyObject> args) {
+  'len': Builtin((List<MonkeyObject> args) {
     if (args.length != 1) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'wrong number of arguments. got=${args.length}, want=1');
     }
 
     MonkeyObject arg = args.first;
     if (arg is MonkeyString) {
-      return new MonkeyInteger(arg.value.length);
+      return MonkeyInteger(arg.value.length);
     } else if (arg is MonkeyArray) {
-      return new MonkeyInteger(arg.elements.length);
+      return MonkeyInteger(arg.elements.length);
     }
 
-    throw new MonkeyError('argument to `len` not supported, got ${arg.type}');
+    throw MonkeyError('argument to `len` not supported, got ${arg.type}');
   }),
-  'first': new Builtin((List<MonkeyObject> args) {
+  'first': Builtin((List<MonkeyObject> args) {
     if (args.length != 1) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'wrong number of arguments. got=${args.length}, want=1');
     }
 
     MonkeyObject arg = args.first;
     if (arg.type != ARRAY_OBJ) {
-      throw new MonkeyError(
-          'argument to `first` must be ARRAY, got ${arg.type}');
+      throw MonkeyError('argument to `first` must be ARRAY, got ${arg.type}');
     }
 
     MonkeyArray array = arg;
@@ -37,16 +36,15 @@ final Map<String, Builtin> builtins = {
 
     return NULL;
   }),
-  'last': new Builtin((List<MonkeyObject> args) {
+  'last': Builtin((List<MonkeyObject> args) {
     if (args.length != 1) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'wrong number of arguments. got=${args.length}, want=1');
     }
 
     MonkeyObject arg = args.first;
     if (arg.type != ARRAY_OBJ) {
-      throw new MonkeyError(
-          'argument to `last` must be ARRAY, got ${arg.type}');
+      throw MonkeyError('argument to `last` must be ARRAY, got ${arg.type}');
     }
 
     MonkeyArray array = arg;
@@ -56,41 +54,39 @@ final Map<String, Builtin> builtins = {
 
     return NULL;
   }),
-  'rest': new Builtin((List<MonkeyObject> args) {
+  'rest': Builtin((List<MonkeyObject> args) {
     if (args.length != 1) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'wrong number of arguments. got=${args.length}, want=1');
     }
 
     MonkeyObject arg = args.first;
     if (arg.type != ARRAY_OBJ) {
-      throw new MonkeyError(
-          'argument to `rest` must be ARRAY, got ${arg.type}');
+      throw MonkeyError('argument to `rest` must be ARRAY, got ${arg.type}');
     }
 
     MonkeyArray array = arg;
     if (array.elements.isNotEmpty) {
-      return new MonkeyArray(array.elements.sublist(1));
+      return MonkeyArray(array.elements.sublist(1));
     }
 
     return NULL;
   }),
-  'push': new Builtin((List<MonkeyObject> args) {
+  'push': Builtin((List<MonkeyObject> args) {
     if (args.length != 2) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'wrong number of arguments. got=${args.length}, want=2');
     }
 
     if (args.first.type != ARRAY_OBJ) {
-      throw new MonkeyError(
+      throw MonkeyError(
           'argument to `push` must be ARRAY, got ${args.first.type}');
     }
 
     MonkeyArray array = args.first;
-    return new MonkeyArray(
-        new List<MonkeyObject>.from(array.elements)..add(args[1]));
+    return MonkeyArray(List<MonkeyObject>.from(array.elements)..add(args[1]));
   }),
-  'puts': new Builtin((List<MonkeyObject> args) {
+  'puts': Builtin((List<MonkeyObject> args) {
     args.forEach((MonkeyObject arg) {
       Monkey.monkeyPrint(arg.inspect());
     });

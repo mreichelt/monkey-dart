@@ -10,7 +10,7 @@ import 'package:monkey_lang/parser/parser.dart';
 
 void start() {
   const String prompt = '>> ';
-  final Environment env = new Environment.freshEnvironment();
+  final Environment env = Environment.freshEnvironment();
 
   while (true) {
     stdout.write(prompt);
@@ -20,7 +20,7 @@ void start() {
       return;
     }
 
-    Parser parser = new Parser(new Lexer(inputText));
+    Parser parser = Parser(Lexer(inputText));
     Program program = parser.parseProgram();
     if (parser.hasErrors()) {
       print(parser.getErrorsAsString());

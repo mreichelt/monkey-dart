@@ -19,7 +19,7 @@ void main() {
   test('test identifier expression', () {
     ExpressionStatement statement = parseExpressionStatement('foobar;');
 
-    expect(statement.expression, new isInstanceOf<Identifier>());
+    expect(statement.expression, isA<Identifier>());
     Identifier ident = statement.expression;
 
     expect(ident.value, equals('foobar'));
@@ -107,7 +107,7 @@ void main() {
   test('test if expression', () {
     ExpressionStatement statement =
         parseExpressionStatement('if (x < y) { x }');
-    expect(statement.expression, new isInstanceOf<IfExpression>());
+    expect(statement.expression, isA<IfExpression>());
     IfExpression expression = statement.expression;
     testInfixExpression(expression.condition, 'x', '<', 'y');
     expect(expression.consequence.statements, hasLength(1));
@@ -119,7 +119,7 @@ void main() {
   test('test if/else expression', () {
     ExpressionStatement statement =
         parseExpressionStatement('if (x < y) { x } else { y }');
-    expect(statement.expression, new isInstanceOf<IfExpression>());
+    expect(statement.expression, isA<IfExpression>());
     IfExpression expression = statement.expression;
     testInfixExpression(expression.condition, 'x', '<', 'y');
 
@@ -135,7 +135,7 @@ void main() {
   test('test function literal parsing', () {
     ExpressionStatement statement =
         parseExpressionStatement('fn(x, y) { x + y; }');
-    expect(statement.expression, new isInstanceOf<FunctionLiteral>());
+    expect(statement.expression, isA<FunctionLiteral>());
     FunctionLiteral function = statement.expression;
 
     expect(function.parameters, hasLength(2));
@@ -143,8 +143,7 @@ void main() {
     testLiteralExpression(function.parameters[1], 'y');
 
     expect(function.body.statements, hasLength(1));
-    expect(function.body.statements.first,
-        new isInstanceOf<ExpressionStatement>());
+    expect(function.body.statements.first, isA<ExpressionStatement>());
     ExpressionStatement body = function.body.statements.first;
     testInfixExpression(body.expression, 'x', '+', 'y');
   });
@@ -158,7 +157,7 @@ void main() {
   test('test call expression parsing', () {
     ExpressionStatement statement =
         parseExpressionStatement('add(1, 2 * 3, 4 + 5);');
-    expect(statement.expression, new isInstanceOf<CallExpression>());
+    expect(statement.expression, isA<CallExpression>());
     CallExpression call = statement.expression;
     testIdentifier(call.function, 'add');
     expect(call.arguments, hasLength(3));
@@ -169,7 +168,7 @@ void main() {
 
   test('test string literal expression parsing', () {
     ExpressionStatement statement = parseExpressionStatement('"hello world"');
-    expect(statement.expression, new isInstanceOf<StringLiteral>());
+    expect(statement.expression, isA<StringLiteral>());
     StringLiteral literal = statement.expression;
     expect(literal.value, equals('hello world'));
   });
@@ -177,7 +176,7 @@ void main() {
   test('test array literals parsing', () {
     ExpressionStatement statement =
         parseExpressionStatement('[1, 2 * 2, 3 + 3]');
-    expect(statement.expression, new isInstanceOf<ArrayLiteral>());
+    expect(statement.expression, isA<ArrayLiteral>());
     ArrayLiteral array = statement.expression;
     expect(array.elements, hasLength(3));
     testIntegerLiteral(array.elements[0], 1);
@@ -187,7 +186,7 @@ void main() {
 
   test('test parsing index expressions', () {
     ExpressionStatement statement = parseExpressionStatement('myArray[1 + 1]');
-    expect(statement.expression, new isInstanceOf<IndexExpression>());
+    expect(statement.expression, isA<IndexExpression>());
     IndexExpression indexExpression = statement.expression;
     testIdentifier(indexExpression.left, 'myArray');
     testInfixExpression(indexExpression.index, 1, '+', 1);
@@ -197,12 +196,12 @@ void main() {
     ExpressionStatement statement =
         parseExpressionStatement('{"one": 1, "two": 2, "three": 3}');
     Map<String, int> expected = {"one": 1, "two": 2, "three": 3};
-    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    expect(statement.expression, isA<HashLiteral>());
     HashLiteral hash = statement.expression;
     expect(hash.pairs, hasLength(3));
 
     hash.pairs.forEach((key, value) {
-      expect(key, new isInstanceOf<StringLiteral>());
+      expect(key, isA<StringLiteral>());
       StringLiteral literal = key;
       int expectedValue = expected[literal.toString()];
       testIntegerLiteral(value, expectedValue);
@@ -211,7 +210,7 @@ void main() {
 
   test('test parsing empty hash literal', () {
     ExpressionStatement statement = parseExpressionStatement('{}');
-    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    expect(statement.expression, isA<HashLiteral>());
     HashLiteral hash = statement.expression;
     expect(hash.pairs, isEmpty);
   });
@@ -219,7 +218,7 @@ void main() {
   test('test parsing hash literal with expressions', () {
     ExpressionStatement statement = parseExpressionStatement(
         '{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}');
-    expect(statement.expression, new isInstanceOf<HashLiteral>());
+    expect(statement.expression, isA<HashLiteral>());
     HashLiteral hash = statement.expression;
     expect(hash.pairs, hasLength(3));
 
@@ -236,7 +235,7 @@ void main() {
     };
 
     hash.pairs.forEach((key, value) {
-      expect(key, new isInstanceOf<StringLiteral>());
+      expect(key, isA<StringLiteral>());
       StringLiteral literal = key;
       testFunctions[literal.toString()](value);
     });
@@ -251,14 +250,14 @@ void main() {
 }
 
 void testParserError(String input) {
-  Parser parser = new Parser(new Lexer(input));
+  Parser parser = Parser(Lexer(input));
   parser.parseProgram();
   expect(parser.errors, isNotEmpty);
 }
 
 void testFunctionParameters(String input, List<String> expectedParameters) {
   ExpressionStatement statement = parseExpressionStatement(input);
-  expect(statement.expression, new isInstanceOf<FunctionLiteral>());
+  expect(statement.expression, isA<FunctionLiteral>());
   FunctionLiteral function = statement.expression;
 
   expect(function.parameters, hasLength(expectedParameters.length));
@@ -281,7 +280,7 @@ void testLetStatementParsing(
 
 void testLetStatement(Statement statement, String name) {
   expect(statement.tokenLiteral(), equals('let'));
-  expect(statement, new isInstanceOf<LetStatement>());
+  expect(statement, isA<LetStatement>());
   LetStatement letStatement = statement;
   expect(letStatement.name.value, equals(name));
   expect(letStatement.name.tokenLiteral(), equals(name));
@@ -290,13 +289,13 @@ void testLetStatement(Statement statement, String name) {
 void testReturnStatementParsing(String input, Object expectedValue) {
   Statement statement = parseSingleStatement(input);
   expect(statement.tokenLiteral(), equals('return'));
-  expect(statement, new isInstanceOf<ReturnStatement>());
+  expect(statement, isA<ReturnStatement>());
   ReturnStatement returnStatement = statement;
   testLiteralExpression(returnStatement.returnValue, expectedValue);
 }
 
 Program parseProgramChecked(String input) {
-  Parser parser = new Parser(new Lexer(input));
+  Parser parser = Parser(Lexer(input));
   Program program = parser.parseProgram();
   checkParserErrors(parser);
   return program;
@@ -310,14 +309,14 @@ Statement parseSingleStatement(String input) {
 
 ExpressionStatement parseExpressionStatement(String input) {
   Statement statement = parseSingleStatement(input);
-  expect(statement, new isInstanceOf<ExpressionStatement>());
+  expect(statement, isA<ExpressionStatement>());
   ExpressionStatement expressionStatement = statement;
   return expressionStatement;
 }
 
 void testPrefix(String input, String operator, Object expectedValue) {
   ExpressionStatement statement = parseExpressionStatement(input);
-  expect(statement.expression, new isInstanceOf<PrefixExpression>());
+  expect(statement.expression, isA<PrefixExpression>());
   PrefixExpression expression = statement.expression;
   expect(expression.operator, equals(operator));
   testLiteralExpression(expression.right, expectedValue);
@@ -326,7 +325,7 @@ void testPrefix(String input, String operator, Object expectedValue) {
 void testInfix(
     String input, Object leftValue, String operator, Object rightValue) {
   ExpressionStatement expressionStatement = parseExpressionStatement(input);
-  expect(expressionStatement.expression, new isInstanceOf<InfixExpression>());
+  expect(expressionStatement.expression, isA<InfixExpression>());
   InfixExpression expression = expressionStatement.expression;
   testLiteralExpression(expression.left, leftValue);
   expect(expression.operator, equals(operator));
@@ -339,14 +338,14 @@ void testPrecedence(String input, String expected) {
 }
 
 void testIntegerLiteral(Expression expression, int integerValue) {
-  expect(expression, new isInstanceOf<IntegerLiteral>());
+  expect(expression, isA<IntegerLiteral>());
   IntegerLiteral literal = expression;
   expect(literal.value, equals(integerValue));
   expect(literal.tokenLiteral(), equals('$integerValue'));
 }
 
 void testIdentifier(Expression expression, String value) {
-  expect(expression, new isInstanceOf<Identifier>());
+  expect(expression, isA<Identifier>());
   Identifier identifier = expression;
   expect(identifier.value, equals(value));
   expect(identifier.tokenLiteral(), equals(value));
@@ -365,7 +364,7 @@ void testLiteralExpression(Expression expression, Object expected) {
 }
 
 void testBooleanLiteral(Expression expression, bool expected) {
-  expect(expression, new isInstanceOf<BooleanLiteral>());
+  expect(expression, isA<BooleanLiteral>());
   BooleanLiteral boolean = expression;
   expect(boolean.value, equals(expected));
   expect(boolean.tokenLiteral(), equals(expected.toString()));
@@ -373,7 +372,7 @@ void testBooleanLiteral(Expression expression, bool expected) {
 
 void testInfixExpression(
     Expression expression, Object left, String operator, Object right) {
-  expect(expression, new isInstanceOf<InfixExpression>());
+  expect(expression, isA<InfixExpression>());
 
   InfixExpression infixExpression = expression;
   testLiteralExpression(infixExpression.left, left);

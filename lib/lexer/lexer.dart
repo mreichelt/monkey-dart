@@ -31,83 +31,83 @@ class Lexer {
 
     Token token;
     if (ch == null) {
-      token = new Token(Token.EOF, '');
+      token = Token(Token.EOF, '');
     } else {
       switch (ch) {
         case '=':
           if (peekChar() == '=') {
             String temp = ch;
             readChar();
-            token = new Token(Token.EQ, temp + ch);
+            token = Token(Token.EQ, temp + ch);
           } else {
-            token = new Token(Token.ASSIGN, ch);
+            token = Token(Token.ASSIGN, ch);
           }
           break;
         case ';':
-          token = new Token(Token.SEMICOLON, ch);
+          token = Token(Token.SEMICOLON, ch);
           break;
         case '(':
-          token = new Token(Token.LPAREN, ch);
+          token = Token(Token.LPAREN, ch);
           break;
         case ')':
-          token = new Token(Token.RPAREN, ch);
+          token = Token(Token.RPAREN, ch);
           break;
         case ',':
-          token = new Token(Token.COMMA, ch);
+          token = Token(Token.COMMA, ch);
           break;
         case '+':
-          token = new Token(Token.PLUS, ch);
+          token = Token(Token.PLUS, ch);
           break;
         case '-':
-          token = new Token(Token.MINUS, ch);
+          token = Token(Token.MINUS, ch);
           break;
         case '!':
           if (peekChar() == '=') {
             String temp = ch;
             readChar();
-            token = new Token(Token.NOT_EQ, temp + ch);
+            token = Token(Token.NOT_EQ, temp + ch);
           } else {
-            token = new Token(Token.BANG, ch);
+            token = Token(Token.BANG, ch);
           }
           break;
         case '/':
-          token = new Token(Token.SLASH, ch);
+          token = Token(Token.SLASH, ch);
           break;
         case '*':
-          token = new Token(Token.ASTERISK, ch);
+          token = Token(Token.ASTERISK, ch);
           break;
         case '<':
-          token = new Token(Token.LT, ch);
+          token = Token(Token.LT, ch);
           break;
         case '>':
-          token = new Token(Token.GT, ch);
+          token = Token(Token.GT, ch);
           break;
         case '{':
-          token = new Token(Token.LBRACE, ch);
+          token = Token(Token.LBRACE, ch);
           break;
         case '}':
-          token = new Token(Token.RBRACE, ch);
+          token = Token(Token.RBRACE, ch);
           break;
         case '"':
-          token = new Token(Token.STRING, readString());
+          token = Token(Token.STRING, readString());
           break;
         case '[':
-          token = new Token(Token.LBRACKET, ch);
+          token = Token(Token.LBRACKET, ch);
           break;
         case ']':
-          token = new Token(Token.RBRACKET, ch);
+          token = Token(Token.RBRACKET, ch);
           break;
         case ':':
-          token = new Token(Token.COLON, ch);
+          token = Token(Token.COLON, ch);
           break;
         default:
           if (isLetter(ch)) {
             String ident = readIdentifier();
-            return new Token(Token.lookupIdent(ident), ident);
+            return Token(Token.lookupIdent(ident), ident);
           } else if (isDigit(ch)) {
-            return new Token(Token.INT, readNumber());
+            return Token(Token.INT, readNumber());
           } else {
-            token = new Token(Token.ILLEGAL, ch);
+            token = Token(Token.ILLEGAL, ch);
           }
           break;
       }

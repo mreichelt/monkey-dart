@@ -3,11 +3,11 @@ import 'package:monkey_lang/token/token.dart';
 import 'package:test/test.dart';
 
 Token t(String tokenType, String literal) {
-  return new Token(tokenType, literal);
+  return Token(tokenType, literal);
 }
 
 void testLexer(List<Token> expected, String input) {
-  Lexer lexer = new Lexer(input);
+  Lexer lexer = Lexer(input);
   for (int i = 0; i < expected.length; i++) {
     Token expectedToken = expected[i];
     Token actualToken = lexer.nextToken();

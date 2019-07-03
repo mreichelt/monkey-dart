@@ -84,8 +84,8 @@ class Parser {
   }
 
   Program parseProgram() {
-    Program program = new Program();
-    program.statements = new List();
+    Program program = Program();
+    program.statements = List();
     while (!currentTokenIs(Token.EOF)) {
       Statement statement = parseStatement();
       if (statement != null) {
@@ -109,7 +109,7 @@ class Parser {
   }
 
   ReturnStatement parseReturnStatement() {
-    ReturnStatement statement = new ReturnStatement(currentToken);
+    ReturnStatement statement = ReturnStatement(currentToken);
 
     nextToken();
 
@@ -123,13 +123,13 @@ class Parser {
   }
 
   LetStatement parseLetStatement() {
-    LetStatement statement = new LetStatement(currentToken);
+    LetStatement statement = LetStatement(currentToken);
 
     if (!expectPeek(Token.IDENT)) {
       return null;
     }
 
-    statement.name = new Identifier(currentToken, currentToken.literal);
+    statement.name = Identifier(currentToken, currentToken.literal);
 
     if (!expectPeek(Token.ASSIGN)) {
       return null;
@@ -147,7 +147,7 @@ class Parser {
   }
 
   ExpressionStatement parseExpressionStatement() {
-    ExpressionStatement statement = new ExpressionStatement(currentToken);
+    ExpressionStatement statement = ExpressionStatement(currentToken);
     statement.expression = parseExpression(Precedence.LOWEST);
     if (peekTokenIs(Token.SEMICOLON)) {
       nextToken();
@@ -207,10 +207,10 @@ class Parser {
   }
 
   Expression parseIdentifier() =>
-      new Identifier(currentToken, currentToken.literal);
+      Identifier(currentToken, currentToken.literal);
 
   Expression parseIntegerLiteral() {
-    IntegerLiteral literal = new IntegerLiteral(currentToken);
+    IntegerLiteral literal = IntegerLiteral(currentToken);
     try {
       int value = int.parse(currentToken.literal);
       literal.value = value;
@@ -223,7 +223,7 @@ class Parser {
 
   PrefixExpression parsePrefixExpression() {
     PrefixExpression expression =
-        new PrefixExpression(currentToken, currentToken.literal);
+        PrefixExpression(currentToken, currentToken.literal);
     nextToken();
     expression.right = parseExpression(Precedence.PREFIX);
     return expression;
@@ -237,7 +237,7 @@ class Parser {
 
   InfixExpression parseInfixExpression(Expression left) {
     InfixExpression expression =
-        new InfixExpression(currentToken, currentToken.literal, left);
+        InfixExpression(currentToken, currentToken.literal, left);
     Precedence precedence = currentPrecendence();
     nextToken();
     expression.right = parseExpression(precedence);
@@ -245,7 +245,7 @@ class Parser {
   }
 
   BooleanLiteral parseBoolean() =>
-      new BooleanLiteral(currentToken, currentTokenIs(Token.TRUE));
+      BooleanLiteral(currentToken, currentTokenIs(Token.TRUE));
 
   Expression parseGroupedExpression() {
     nextToken();
@@ -257,7 +257,7 @@ class Parser {
   }
 
   IfExpression parseIfExpression() {
-    IfExpression expression = new IfExpression(currentToken);
+    IfExpression expression = IfExpression(currentToken);
     if (!expectPeek(Token.LPAREN)) {
       return null;
     }
@@ -288,7 +288,7 @@ class Parser {
   }
 
   BlockStatement parseBlockStatement() {
-    BlockStatement block = new BlockStatement(currentToken);
+    BlockStatement block = BlockStatement(currentToken);
     nextToken();
     while (!currentTokenIs(Token.RBRACE) && !currentTokenIs(Token.EOF)) {
       Statement statement = parseStatement();
@@ -301,7 +301,7 @@ class Parser {
   }
 
   FunctionLiteral parseFunctionLiteral() {
-    FunctionLiteral function = new FunctionLiteral(currentToken);
+    FunctionLiteral function = FunctionLiteral(currentToken);
     if (!expectPeek(Token.LPAREN)) {
       return null;
     }
@@ -323,12 +323,12 @@ class Parser {
 
     nextToken();
 
-    parameters.add(new Identifier(currentToken, currentToken.literal));
+    parameters.add(Identifier(currentToken, currentToken.literal));
 
     while (peekTokenIs(Token.COMMA)) {
       nextToken();
       nextToken();
-      parameters.add(new Identifier(currentToken, currentToken.literal));
+      parameters.add(Identifier(currentToken, currentToken.literal));
     }
 
     if (!expectPeek(Token.RPAREN)) {
@@ -339,16 +339,16 @@ class Parser {
   }
 
   CallExpression parseCallExpression(Expression function) {
-    CallExpression call = new CallExpression(currentToken, function);
+    CallExpression call = CallExpression(currentToken, function);
     call.arguments = parseExpressionList(Token.RPAREN);
     return call;
   }
 
   StringLiteral parseStringLiteral() =>
-      new StringLiteral(currentToken, currentToken.literal);
+      StringLiteral(currentToken, currentToken.literal);
 
   ArrayLiteral parseArrayLiteral() =>
-      new ArrayLiteral(currentToken, parseExpressionList(Token.RBRACKET));
+      ArrayLiteral(currentToken, parseExpressionList(Token.RBRACKET));
 
   List<Expression> parseExpressionList(String endTokenType) {
     List<Expression> list = [];
@@ -375,7 +375,7 @@ class Parser {
   }
 
   IndexExpression parseIndexExpression(Expression left) {
-    IndexExpression expression = new IndexExpression(currentToken)..left = left;
+    IndexExpression expression = IndexExpression(currentToken)..left = left;
     nextToken();
     expression.index = parseExpression(Precedence.LOWEST);
     if (!expectPeek(Token.RBRACKET)) {
@@ -385,7 +385,7 @@ class Parser {
   }
 
   HashLiteral parseHashLiteral() {
-    HashLiteral hash = new HashLiteral(currentToken);
+    HashLiteral hash = HashLiteral(currentToken);
     while (!peekTokenIs(Token.RBRACE)) {
       nextToken();
       Expression key = parseExpression(Precedence.LOWEST);
@@ -412,8 +412,8 @@ class Parser {
 
   String getErrorsAsString() {
     return '${Monkey.FACE}\n'
-        'Woops! We ran into some monkey business here!\n'
-        ' parser errors:\n' +
+            'Woops! We ran into some monkey business here!\n'
+            ' parser errors:\n' +
         errors.fold('',
             (prev, element) => prev == '' ? '\t$element' : '$prev\n\t$element');
   }

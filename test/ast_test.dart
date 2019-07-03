@@ -4,9 +4,9 @@ import 'package:test/test.dart';
 
 void main() {
   test('test program.toString()', () {
-    Program program = new Program()
+    Program program = Program()
       ..statements = [
-        new LetStatement(new Token(Token.LET, 'let'))
+        LetStatement(Token(Token.LET, 'let'))
           ..name = ident('myVar')
           ..value = ident('anotherVar')
       ];
@@ -15,5 +15,4 @@ void main() {
   });
 }
 
-Identifier ident(String name) =>
-    new Identifier(new Token(Token.IDENT, name), name);
+Identifier ident(String name) => Identifier(Token(Token.IDENT, name), name);
