@@ -157,7 +157,7 @@ void main() {
     testBuiltin('len("hello world")', 11);
     testBuiltin('len(1)', 'argument to `len` not supported, got INTEGER');
     testBuiltin(
-        'len("one", "two")', "wrong number of arguments. got=2, want=1");
+        'len("one", "two")', 'wrong number of arguments. got=2, want=1');
     testBuiltin('len([1, 2, 3])', 3);
     testBuiltin('len([])', 0);
     testBuiltin('puts("hello", "world!")', null);
@@ -199,7 +199,7 @@ void main() {
   });
 
   test('test hash literals', () {
-    MonkeyObject evaluated = testEval("""
+    MonkeyObject evaluated = testEval('''
       let two = "two";
       {
         "one": 10 - 9,
@@ -209,7 +209,7 @@ void main() {
         true: 5,
         false: 6
       }
-    """);
+    ''');
     expect(evaluated, isA<Hash>());
     Hash hash = evaluated;
     Map<HashKey, int> expected = {

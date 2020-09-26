@@ -25,6 +25,7 @@ abstract class Expression extends Node {
 class Program extends Node {
   List<Statement> statements;
 
+  @override
   String tokenLiteral() {
     return statements.isEmpty ? '' : statements.first.tokenLiteral;
   }

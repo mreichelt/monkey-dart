@@ -85,7 +85,7 @@ class Parser {
 
   Program parseProgram() {
     Program program = Program();
-    program.statements = List();
+    program.statements = [];
     while (!currentTokenIs(Token.EOF)) {
       Statement statement = parseStatement();
       if (statement != null) {

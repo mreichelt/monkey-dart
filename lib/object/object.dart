@@ -31,9 +31,7 @@ class HashKey {
     if (identical(this, other)) {
       return true;
     }
-    return other is HashKey &&
-        this.type == other.type &&
-        this.value == other.value;
+    return other is HashKey && type == other.type && value == other.value;
   }
 
   @override
@@ -154,5 +152,6 @@ class MonkeyError extends Error {
 
   MonkeyError(this.message);
 
+  @override
   String toString() => 'ERROR: $message';
 }

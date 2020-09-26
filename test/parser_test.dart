@@ -195,7 +195,7 @@ void main() {
   test('test parsing hash literal string keys', () {
     ExpressionStatement statement =
         parseExpressionStatement('{"one": 1, "two": 2, "three": 3}');
-    Map<String, int> expected = {"one": 1, "two": 2, "three": 3};
+    Map<String, int> expected = {'one': 1, 'two': 2, 'three': 3};
     expect(statement.expression, isA<HashLiteral>());
     HashLiteral hash = statement.expression;
     expect(hash.pairs, hasLength(3));

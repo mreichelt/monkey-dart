@@ -38,7 +38,7 @@ void main() {
   });
 
   test('test monkey language tokens', () {
-    String input = """
+    String input = '''
       let five = 5;
       let ten = 10;
 
@@ -62,7 +62,7 @@ void main() {
       "foo bar"
       [1, 2];
       {"foo": "bar"}
-    """;
+    ''';
     List<Token> expected = [
       t(Token.LET, 'let'),
       t(Token.IDENT, 'five'),
